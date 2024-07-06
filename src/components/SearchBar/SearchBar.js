@@ -1,15 +1,16 @@
 import React from 'react';
-
+import './SearchBar.css';
 const SearchBar = ({ searchQuery, setSearchQuery }) => {
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search by title..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-    </div>
+    <div className="search-container">
+    <input
+      type="text"
+      placeholder="Search by title..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className="search-input"
+    />
+  </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {  incrementQuantity, decrementQuantity, removeBook } from '../../redux/actions/shoppingCartActions';
-
+import { incrementQuantity, decrementQuantity, removeBook } from '../../redux/actions/shoppingCartActions';
+import './ShoppingCart.css';
 const ShoppingCart = () => {
 
   const dispatch = useDispatch();
@@ -19,23 +19,25 @@ const ShoppingCart = () => {
     dispatch(removeBook(bookId))
   };
   return (
-    <div>
+    <div className="shopping-cart-container">
       <h2>Shopping Cart</h2>
       {shoppingCart.length === 0 ? (
         <p>Your cart is empty</p>
       ) : (
-        <ul>
+        <ul className="cart-list">
           {shoppingCart.map((item) => (
-            <li key={item.id}>
-              <img src={item.imageUrl} alt={item.title} style={{ width: '50px', height: '75px' }} />
-              <span>{item.title}</span>
-              <span>
-                Quantity: 
-                <button onClick={() => increment(item.id)}>-</button>
+            <li key={item.id} className="cart-item">
+              <div>
+              <span className="cart-item-title">{item.title}</span>              
+              <span className="cart-item-author">by {item.author?.name}</span>
+              </div>
+              <span className="cart-item-quantity">
+                Quantity:
+                <button onClick={() => decrement(item.id)} className="quantity-button">-</button>
                 {item.quantity}
-                <button onClick={() => decrement(item.id)}>+</button>
+                <button onClick={() => increment(item.id)} className="quantity-button">+</button>
               </span>
-              <button onClick={() => remove(item.id)}>Remove</button>
+              <button onClick={() => remove(item.id)} className="remove-button">Remove</button>
             </li>
           ))}
         </ul>
@@ -45,4 +47,3 @@ const ShoppingCart = () => {
 };
 
 export default ShoppingCart;
-  
