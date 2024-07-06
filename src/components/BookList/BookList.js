@@ -1,8 +1,15 @@
 import Book from '../Book/Book';
 import { useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
-import ShoppingCart from '../ShoppingCart/ShoppingCart';
+import { useDispatch, useSelector } from "react-redux";
+import {addBook } from '../../redux/actions/shoppingCartActions';
+
 const BookList = () => {
+  const dispatch = useDispatch();
+  const shoppingCart = useSelector(state => state.shoppingCart.shoppingCart)
+  const addToCart = (book) => {
+    dispatch(addBook(book));
+  };
   const [books, setBooks] = useState([
     {
       "id": 1,
@@ -430,57 +437,19 @@ const BookList = () => {
   const filteredBooks = books.filter((book) =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const [cart, setCart] = useState([]);
-
-  const addToCart = (book) => {
-    console.log('here' + book);
-    setCart((prevCart) => {
-      const existingBook = prevCart.find((item) => item.id === book.id);
-      if (existingBook) {
-        return prevCart.map((item) =>
-          item.id === book.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
-        return [...prevCart, { ...book, quantity: 1 }];
-      }
-    });
-  };
-
-
-
-  const incrementQuantity = (bookId) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === bookId ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
-
-  const decrementQuantity = (bookId) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === bookId && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
-      )
-    );
-  };
-
-  const removeFromCart = (bookId) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== bookId));
-  };
 
   return (
     <div>
-     <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <h2>Book List</h2>
-      <ShoppingCart cart={cart} incrementQuantity={incrementQuantity} decrementQuantity={decrementQuantity} removeFromCart={removeFromCart} />
       <ul>
         {filteredBooks.map(book => (
           <li key={book.id}>
-            <Book book={book} addToCart={addToCart} />
+            <Book book={book} addToCart={() => addToCart(book)} />
           </li>
         ))}
       </ul>
-      
+
     </div>
   );
 }
