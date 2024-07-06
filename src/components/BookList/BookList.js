@@ -1,6 +1,6 @@
 import Book from '../Book/Book';
 import { useState } from 'react';
-import SearchBar from '../SearchBar';
+import SearchBar from '../SearchBar/SearchBar';
 import ShoppingCart from '../ShoppingCart/ShoppingCart';
 const BookList = () => {
   const [books, setBooks] = useState([
