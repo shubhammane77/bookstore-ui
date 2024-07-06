@@ -1,11 +1,11 @@
 import './App.css';
-import BookList from './components/BookList';
+import BookList from './components/BookList/BookList';
 
 function App() {
   return (
     <div className="App">
       <h1>
-        BookStore
+        searchBar
       </h1>
       <BookList/>
     </div>
