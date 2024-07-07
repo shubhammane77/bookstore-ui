@@ -13,6 +13,11 @@ const mockStore = configureMockStore();
 const store = mockStore({
   shoppingCart: {
     shoppingCart: []
+  },
+  user: {
+    userId: 1,
+    token: 'test',
+    userName: 'testName'
   }
 });
 
@@ -24,8 +29,14 @@ const filledStore = mockStore({
     ],
     totalPrice: 35,
     cartId: 123,
+  },
+  user: {
+    userId: 1,
+    token: 'test',
+    userName: 'testName'
   }
-});
+}
+);
 store.dispatch = jest.fn();
 const mockUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -56,7 +67,7 @@ describe('ShoppingCart Component', () => {
     fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: '3' } });
     const dispatch = jest.fn();
 
-    expect(postData).toHaveBeenCalledWith('/v1/cart/update', { cartId: 123, bookId: 1, quantity: 3 });
+    expect(postData).toHaveBeenCalledWith('/v1/cart/update', { cartId: 123, bookId: 1, quantity: 3 },{"Authorization": "Bearer test"});
   });
 
   test('displays empty cart message when cart is empty', () => {

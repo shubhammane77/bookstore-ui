@@ -1,15 +1,18 @@
+
 const apiUrl = process.env.REACT_APP_API_URL;
 
 // Function to handle API calls using fetch
-// Function to handle API calls using fetch
-async function fetchData(endpoint) {
+async function fetchData(endpoint, headers = {}) {
   const url = `${apiUrl}${endpoint}`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: headers
+    });
+
     if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Resource not found (404)');
+      if (response.status === 404 || response.status == 401) {
+        throw new Error(response.status);
       }
       throw new Error('Network response was not ok');
     }
@@ -21,20 +24,26 @@ async function fetchData(endpoint) {
 }
 
 // Function to handle POST requests
-async function postData(endpoint, data) {
+async function postData(endpoint, data, headers = {}) {
   const url = `${apiUrl}${endpoint}`;
 
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
+        ...headers,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
+
     if (!response.ok) {
+      if (response.status === 404 || response.status == 401) {
+        throw new Error(response.status);
+      }
       throw new Error('Network response was not ok');
     }
+
     const responseData = await response.json();
     return responseData;
   } catch (error) {
@@ -44,22 +53,25 @@ async function postData(endpoint, data) {
 }
 
 // Function to handle DELETE requests
-async function deleteData(endpoint) {
+async function deleteData(endpoint, headers = {}) {
   const url = `${apiUrl}${endpoint}`;
 
   try {
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
+        ...headers,
         'Content-Type': 'application/json',
       },
     });
+
     if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Resource not found (404)');
+      if (response.status === 404 || response.status == 401) {
+        throw new Error(response.status);
       }
       throw new Error('Network response was not ok');
     }
+
     const responseData = await response.json();
     return responseData;
   } catch (error) {
@@ -67,6 +79,5 @@ async function deleteData(endpoint) {
     throw error;
   }
 }
-
 
 export { fetchData, postData, deleteData };

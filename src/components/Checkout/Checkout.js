@@ -5,14 +5,17 @@ import './Checkout.css';
 import { postData } from '../../apiService';
 import { deleteCartAction } from '../../redux/actions/shoppingCartActions';
 import { useNavigate } from 'react-router-dom';
+import { user_logout } from '../../redux/actions/userActions';
 
 const Checkout = () => {
     const dispatch = useDispatch();
     const shoppingCart = useSelector((state) => state.shoppingCart.shoppingCart);
     const totalPrice = useSelector((state) => state.shoppingCart.totalPrice);
     const cartId = useSelector((state) => state.shoppingCart.cartId);
+    const userId = useSelector(state => state.user.userId);
+    const token = useSelector(state => state.user.token);
+    var header = { Authorization: `Bearer ${token}` }
 
-    const userId = 1;
     const navigate = useNavigate();
 
     const placeOrder = async (cartId) => {
@@ -23,11 +26,17 @@ const Checkout = () => {
                 userId: userId
 
             }
-            await postData(endpoint, request);
+            await postData(endpoint, request, header);
             dispatch(deleteCartAction());
             navigate('/');
+            alert('Order Placed.');
         } catch (error) {
+            if (error.message === '401') {
+                dispatch(user_logout());
+                return;
+              }
             console.error('Error while placing order:', error);
+            alert('Order Error.')
         }
     }
 

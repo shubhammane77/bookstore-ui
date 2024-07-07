@@ -18,7 +18,11 @@ describe('BookList Component', () => {
                 shoppingCart: [],
                 cartId: 0,
                 totalPrice: 0,
-            },
+            },user: {
+                userId: 1,
+                token: 'test',
+                userName: 'testName'
+              }
         });
         fetchData.mockImplementation((url) => {
             if (url === '/v1/cart/getShoppingCart?userId=1') {

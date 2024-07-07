@@ -1,7 +1,22 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';  // Import the CSS file
+import { useSelector, useDispatch } from 'react-redux';
+import { user_logout } from '../../redux/actions/userActions';
 
 const Header = () => {
+    const userId = useSelector(state => state.user.userId);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        dispatch(user_logout());
+        navigate('/login');
+    };
+
+    if(userId === 0){
+        return null;
+    }
     return (
         <header className="header d-flex">
 
@@ -15,10 +30,12 @@ const Header = () => {
                         <Link to="/cart" className="nav-link">Cart</Link>
                     </li>
                 </ul>
-                <Link to="/contact" className="nav-link float-right">Log Out</Link>
+                <button onClick={handleLogout} className="nav-link float-right">Log Out</button>
 
             </nav>
+
         </header>
+
     );
 };
 

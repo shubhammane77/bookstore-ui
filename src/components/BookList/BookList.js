@@ -5,41 +5,57 @@ import { useDispatch, useSelector } from "react-redux";
 import { addBook, setCartId, setShoppingCartItems, setTotalPrice } from '../../redux/actions/shoppingCartActions';
 import './BookList.css';
 import { fetchData, postData } from '../../apiService';
+import { useNavigate } from 'react-router-dom';
+import { user_logout } from '../../redux/actions/userActions';
 const BookList = () => {
   const dispatch = useDispatch();
   const shoppingCart = useSelector(state => state.shoppingCart.shoppingCart)
   const cartId = useSelector(state => state.shoppingCart.cartId)
-  const userId = 1;
-
+  const userId = useSelector(state => state.user.userId);
+  const token = useSelector(state => state.user.token);
+  var header = { Authorization: `Bearer ${token}` }
+  var navigate = useNavigate();
   const [books, setBooks] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredBooks = books && books.filter((book) =>
     book.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const fetchCart = async () => {
+    try {
+      setLoading(true);
+      const result = await fetchData(`/v1/cart/getShoppingCart?userId=${userId}`, header);
+      dispatch(setCartId(result.shoppingCartId));
+      dispatch(setTotalPrice(result.totalPrice));
+      dispatch(setShoppingCartItems(result.shoppingCartItems));
+    } catch (error) {
+      if (error.message === '401') {
+        dispatch(user_logout());
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchBooks = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchData('/v1/books/getAllBooks', header);
+      setBooks(data);
+    } catch (error) {
+      if (error.message === '401') {
+        dispatch(user_logout());
+      }
+    } finally {
+      setLoading(false);
+
+    }
+  };
+
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const result = await fetchData(`/v1/cart/getShoppingCart?userId=${userId}`);
-        dispatch(setCartId(result.shoppingCartId));
-        dispatch(setTotalPrice(result.totalPrice));
-        dispatch(setShoppingCartItems(result.shoppingCartItems));
-      } catch (error) {
-        dispatch(setCartId(0));
-        dispatch(setTotalPrice(0));
-      }
-    };
-    const fetchBooks = async () => {
-      try {
-        const data = await fetchData('/v1/books/getAllBooks');
-        setBooks(data);
-      } catch (error) {
-      }
-    };
-    fetchCart();
     fetchBooks();
+    fetchCart();
   }, []);
 
   const createNewCart = async (book) => {
@@ -53,13 +69,16 @@ const BookList = () => {
         }]
       }
       const endpoint = '/v1/cart/create';
-      const result = await postData(endpoint, request);
+      const result = await postData(endpoint, request, header);
       console.log('Added book successfully:', result);
       // set redux states
       dispatch(setCartId(result.cartId));
       dispatch(setTotalPrice(book.unitPrice));
       dispatch(addBook(book));
     } catch (error) {
+      if (error.message === '401') {
+        dispatch(user_logout());
+      }
       console.error('Error adding book:', error);
     }
   }
@@ -76,29 +95,35 @@ const BookList = () => {
           doesBookExistInCart ? doesBookExistInCart.quantity + 1 : 1
       }
 
-      const result = await postData(endpoint, request);
+      const result = await postData(endpoint, request, header);
       console.log('Added book successfully:', result);
       dispatch(addBook(book));
       dispatch(setTotalPrice(result.totalPrice));
     } catch (error) {
+      if (error.message === '401') {
+        dispatch(user_logout());
+      }
       console.error('Error updating book:', error);
     }
   }
   const addToCart = async (book) => {
+    setLoading(true);
     if (cartId === 0) {
       createNewCart(book);
     } else {
       updateCart(book);
     }
+    setLoading(false);
   };
 
   return (
     <div className="book-list-container">
+      {loading && <div className="loading-overlay"><div className="spinner"></div></div>}
       <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <ul className="book-list">
         {filteredBooks && filteredBooks.map(book => (
           <li key={book.id} className="book-item">
-            <Book book={book} addToCart={() => addToCart(book)} />
+            <Book book={book} addToCart={() => addToCart(book)} loading={loading} />
           </li>
         ))}
       </ul>

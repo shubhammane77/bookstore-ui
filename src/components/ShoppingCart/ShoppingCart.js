@@ -5,12 +5,16 @@ import './ShoppingCart.css';
 import { calculateTotalPrice } from '../../utils/util';
 import { deleteData, postData } from '../../apiService';
 import { useNavigate } from 'react-router-dom';
+import { user_logout } from '../../redux/actions/userActions';
 const ShoppingCart = () => {
 
   const dispatch = useDispatch();
   const shoppingCart = useSelector(state => state.shoppingCart.shoppingCart)
   const totalPrice = useSelector(state => state.shoppingCart.totalPrice)
   const cartId = useSelector(state => state.shoppingCart.cartId);
+  const token = useSelector(state => state.user.token);
+
+  var header = {Authorization: `Bearer ${token}`}
 
   const navigate = useNavigate();
 
@@ -18,10 +22,13 @@ const ShoppingCart = () => {
     const endpoint = '/v1/cart/update';
     try {
       const request = { cartId: cartId, bookId: book.id, quantity: quantity };
-      const result = await postData(endpoint, request);
+      const result = await postData(endpoint, request,header);
       dispatch(updateQuantity(book.id, quantity));
       dispatch(setTotalPrice(result.totalPrice));
     } catch (error) {
+      if (error.message === '401') {
+        dispatch(user_logout());
+      }
       console.error('Error updating cart:', error);
     }
   }
@@ -30,9 +37,12 @@ const ShoppingCart = () => {
   const deleteCart = async (cartId) => {
     const endpoint = `/v1/cart/delete?cartId=${cartId}`;
     try {
-      await deleteData(endpoint);
+      await deleteData(endpoint,header);
       dispatch(deleteCartAction());
     } catch (error) {
+      if (error.message === '401') {
+        dispatch(user_logout());
+      }
       console.error('Error deleting cart:', error);
     }
   }
@@ -40,10 +50,13 @@ const ShoppingCart = () => {
   const removeCartItem = async (bookId, cartId) => {
     const endpoint = `/v1/cart/removeCartItem?cartId=${cartId}&bookId=${bookId}`;
     try {
-      const result = await deleteData(endpoint);
+      const result = await deleteData(endpoint,header);
       dispatch(removeBook(bookId));
       dispatch(setTotalPrice(result.totalPrice));
     } catch (error) {
+      if (error.message === '401') {
+        dispatch(user_logout());
+      }
       console.error('Error removing cart item:', error);
     }
   }
@@ -63,16 +76,6 @@ const ShoppingCart = () => {
     navigate('/checkout')
   };
 
-  useEffect(() => {
-    try {
-      var calculatedTotalPrice = calculateTotalPrice(shoppingCart);
-      if (calculatedTotalPrice !== totalPrice) {
-        /// throw new Error // clear cart? 
-      }
-    } catch (error) {
-
-    }
-  }, [shoppingCart, totalPrice]);
   const quantityOptions = Array.from({ length: 50 }, (_, index) => index + 1);
 
   return (

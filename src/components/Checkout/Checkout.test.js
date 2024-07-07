@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import Checkout from './Checkout';
-import { deleteCartAction } from '../../redux/actions/shoppingCartActions';
 import { postData } from '../../apiService';
 
 jest.mock('../../apiService', () => ({
@@ -41,6 +40,11 @@ describe('Checkout', () => {
                 totalPrice: 20,
                 cartId: cartId,
             },
+            user: {
+                userId: 1,
+                token: 'test',
+                userName: 'testName'
+              }
         });
     });
 
@@ -61,6 +65,7 @@ describe('Checkout', () => {
     });
 
     it('calls placeOrder function when "Place Order" button is clicked', async () => {
+        window.alert =jest.fn();
         const { getByText } = render(
             <Provider store={store}>
                 <Router>
@@ -70,11 +75,10 @@ describe('Checkout', () => {
         );
 
         fireEvent.click(getByText(/Place Order/i));
-
+        
         expect(postData).toHaveBeenCalledWith('/v1/order/placeOrder', {
             cartId: cartId,
             userId: userId,
-        });
-
+        },{"Authorization": "Bearer test"});
     });
 });
