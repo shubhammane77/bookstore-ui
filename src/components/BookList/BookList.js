@@ -73,7 +73,7 @@ const BookList = () => {
       request = {
         ...request
         , quantity:
-        doesBookExistInCart ? doesBookExistInCart.quantity + 1 : 1
+          doesBookExistInCart ? doesBookExistInCart.quantity + 1 : 1
       }
 
       const result = await postData(endpoint, request);

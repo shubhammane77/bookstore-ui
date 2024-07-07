@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import Book from './Book';
 
 test('renders book component', () => {
-  var book =  {
+  var book = {
     "id": 6,
     "title": "The Catcher in the Rye",
     "author": {

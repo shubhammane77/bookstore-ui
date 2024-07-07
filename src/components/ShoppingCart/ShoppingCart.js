@@ -17,7 +17,7 @@ const ShoppingCart = () => {
   const updateCart = async (book, quantity, cartId) => {
     const endpoint = '/v1/cart/update';
     try {
-      var request = { cartId: cartId, bookId: book.id, quantity: quantity };
+      const request = { cartId: cartId, bookId: book.id, quantity: quantity };
       const result = await postData(endpoint, request);
       dispatch(updateQuantity(book.id, quantity));
       dispatch(setTotalPrice(result.totalPrice));
@@ -26,7 +26,7 @@ const ShoppingCart = () => {
     }
   }
 
-  
+
   const deleteCart = async (cartId) => {
     const endpoint = `/v1/cart/delete?cartId=${cartId}`;
     try {
@@ -72,7 +72,7 @@ const ShoppingCart = () => {
     } catch (error) {
 
     }
-  }, [shoppingCart,totalPrice]);
+  }, [shoppingCart, totalPrice]);
   const quantityOptions = Array.from({ length: 50 }, (_, index) => index + 1);
 
   return (

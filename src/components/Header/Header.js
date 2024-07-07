@@ -5,7 +5,7 @@ const Header = () => {
     return (
         <header className="header d-flex">
 
-           <h1>Online Bookstore</h1>
+            <h1>Online Bookstore</h1>
             <nav className="nav">
                 <ul className="nav-list">
                     <li className="nav-item">
