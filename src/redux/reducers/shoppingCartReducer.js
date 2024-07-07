@@ -1,4 +1,4 @@
-import { ADD_BOOK, REMOVE_BOOK, SET_CART_ID, SET_TOTAL_PRICE, SET_SHOPPING_CART_ITEMS, UPDATE_BOOK_QUANTITY } from "../constants/shoppingCartActionTypes";
+import { ADD_BOOK, REMOVE_BOOK, SET_CART_ID, SET_TOTAL_PRICE, SET_SHOPPING_CART_ITEMS, UPDATE_BOOK_QUANTITY, DELETE_CART } from "../constants/shoppingCartActionTypes";
 
 // Initial state
 const initialState = {
@@ -23,7 +23,7 @@ const shoppingCartReducer = (state = initialState, action) => {
             } else {
                 return {
                     ...state,
-                    shoppingCart: [...state.shoppingCart,  { book: action.payload, quantity: 1 }]
+                    shoppingCart: [...state.shoppingCart, { book: action.payload, quantity: 1 }]
                 };
             }
 
@@ -31,15 +31,15 @@ const shoppingCartReducer = (state = initialState, action) => {
             const filteredCart = state.shoppingCart.filter(shoppingCartItem => shoppingCartItem.book.id !== action.payload);
             return { ...state, shoppingCart: filteredCart };
 
-        
+
         case UPDATE_BOOK_QUANTITY:
-                const updatedCartItems = state.shoppingCart.map(shoppingCartItem => {
-                    if (shoppingCartItem.book.id === action.payload.bookId) {
-                        return { ...shoppingCartItem, quantity: action.payload.quantity };
-                    }
-                    return shoppingCartItem;
-                });
-                return { ...state, shoppingCart: updatedCartItems };
+            const updatedCartItems = state.shoppingCart.map(shoppingCartItem => {
+                if (shoppingCartItem.book.id === action.payload.bookId) {
+                    return { ...shoppingCartItem, quantity: action.payload.quantity };
+                }
+                return shoppingCartItem;
+            });
+            return { ...state, shoppingCart: updatedCartItems };
 
         case SET_CART_ID:
             return { ...state, cartId: action.payload };
@@ -48,8 +48,10 @@ const shoppingCartReducer = (state = initialState, action) => {
             return { ...state, totalPrice: action.payload };
 
         case SET_SHOPPING_CART_ITEMS:
-                return { ...state, shoppingCart: action.payload };
+            return { ...state, shoppingCart: action.payload };
 
+        case DELETE_CART:
+            return { shoppingCart: [], totalPrice: 0, cartI: 0 };
         default:
             return state;
     }

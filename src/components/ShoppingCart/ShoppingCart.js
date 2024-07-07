@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeBook, updateQuantity, setTotalPrice } from '../../redux/actions/shoppingCartActions';
+import { removeBook, updateQuantity, setTotalPrice, deleteCartAction } from '../../redux/actions/shoppingCartActions';
 import './ShoppingCart.css';
 import { calculateTotalPrice } from '../../utils/util';
 import { deleteData, postData } from '../../apiService';
+import { useNavigate } from 'react-router-dom';
 const ShoppingCart = () => {
 
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ const ShoppingCart = () => {
   const totalPrice = useSelector(state => state.shoppingCart.totalPrice)
   const cartId = useSelector(state => state.shoppingCart.cartId);
 
+  const navigate = useNavigate();
 
   const updateCart = async (book, quantity, cartId) => {
     const endpoint = '/v1/cart/update';
@@ -21,6 +23,17 @@ const ShoppingCart = () => {
       dispatch(setTotalPrice(result.totalPrice));
     } catch (error) {
       console.error('Error updating cart:', error);
+    }
+  }
+
+  
+  const deleteCart = async (cartId) => {
+    const endpoint = `/v1/cart/delete?cartId=${cartId}`;
+    try {
+      await deleteData(endpoint);
+      dispatch(deleteCartAction());
+    } catch (error) {
+      console.error('Error deleting cart:', error);
     }
   }
 
@@ -39,8 +52,15 @@ const ShoppingCart = () => {
     removeCartItem(bookId, cartId);
   };
   const handleQuantityChange = (book, quantity) => {
-
     updateCart(book, quantity, cartId);
+  };
+
+  const handleClearCart = () => {
+    deleteCart(cartId);
+  };
+
+  const handleProceedToCheckout = () => {
+    navigate('/checkout')
   };
 
   useEffect(() => {
@@ -102,6 +122,10 @@ const ShoppingCart = () => {
       <div className="total-price">
         <span>Total Price: ${totalPrice}</span>
       </div>
+      {shoppingCart && shoppingCart.length > 0 && <div className="cart-actions">
+        <button onClick={handleClearCart} className="clear-cart-button">Clear Cart</button>
+        <button onClick={handleProceedToCheckout} className="proceed-checkout-button">Proceed to Checkout</button>
+      </div>}
     </div>
   );
 };
