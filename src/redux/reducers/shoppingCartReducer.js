@@ -51,7 +51,7 @@ const shoppingCartReducer = (state = initialState, action) => {
             return { ...state, shoppingCart: action.payload };
 
         case DELETE_CART:
-            return { shoppingCart: [], totalPrice: 0, cartI: 0 };
+            return { shoppingCart: [], totalPrice: 0, cartId: 0 };
         default:
             return state;
     }

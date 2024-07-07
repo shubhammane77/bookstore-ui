@@ -75,10 +75,13 @@ const BookList = () => {
       dispatch(setCartId(result.cartId));
       dispatch(setTotalPrice(book.unitPrice));
       dispatch(addBook(book));
+      alert('Book added to cart');
     } catch (error) {
       if (error.message === '401') {
         dispatch(user_logout());
       }
+      alert('Book not added to cart');
+
       console.error('Error adding book:', error);
     }
   }
@@ -99,11 +102,13 @@ const BookList = () => {
       console.log('Added book successfully:', result);
       dispatch(addBook(book));
       dispatch(setTotalPrice(result.totalPrice));
+      alert('Book added to cart');
     } catch (error) {
       if (error.message === '401') {
         dispatch(user_logout());
       }
       console.error('Error updating book:', error);
+      alert('Book not added to cart');
     }
   }
   const addToCart = async (book) => {
