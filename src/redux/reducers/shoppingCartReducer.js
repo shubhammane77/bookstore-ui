@@ -1,51 +1,59 @@
-import { ADD_BOOK, REMOVE_BOOK, INCREMENT_BOOK_QUANTITY, DECREMENT_BOOK_QUANTITY } from "../constants/shoppingCartActionTypes";
+import { ADD_BOOK, REMOVE_BOOK, INCREMENT_BOOK_QUANTITY, DECREMENT_BOOK_QUANTITY, SET_CART_ID, SET_TOTAL_PRICE, SET_SHOPPING_CART_ITEMS } from "../constants/shoppingCartActionTypes";
 
 // Initial state
 const initialState = {
-    shoppingCart: []
+    shoppingCart: [],
+    cartId: 0,
+    totalPrice: 0
 };
 
 // Reducer function
 const shoppingCartReducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_BOOK:
-            const existingBookIndex = state.shoppingCart.findIndex(book => book.id === action.payload.id);
+            const existingBookIndex = state.shoppingCart.findIndex(shoppingCartItem => shoppingCartItem.book.id === action.payload.id);
             if (existingBookIndex !== -1) {
-                const updatedCart = state.shoppingCart.map((book, index) => {
+                const updatedCart = state.shoppingCart.map((shoppingCartItem, index) => {
                     if (index === existingBookIndex) {
-                        return { ...book, quantity: book.quantity + 1 };
+                        return { ...shoppingCartItem, quantity: shoppingCartItem.quantity + 1 };
                     }
-                    return book;
+                    return shoppingCartItem;
                 });
                 return { ...state, shoppingCart: updatedCart };
             } else {
                 return {
                     ...state,
-                    shoppingCart: [...state.shoppingCart, { ...action.payload, quantity: 1 }]
+                    shoppingCart: [...state.shoppingCart,  { book: action.payload, quantity: 1 }]
                 };
             }
 
         case REMOVE_BOOK:
-            const filteredCart = state.shoppingCart.filter(book => book.id !== action.payload);
+            const filteredCart = state.shoppingCart.filter(shoppingCartItem => shoppingCartItem.book.id !== action.payload);
             return { ...state, shoppingCart: filteredCart };
 
         case INCREMENT_BOOK_QUANTITY:
-            const incrementedCart = state.shoppingCart.map(book => {
-                if (book.id === action.payload) {
-                    return { ...book, quantity: book.quantity + 1 };
+            const incrementedCart = state.shoppingCart.map(shoppingCartItem => {
+                if (shoppingCartItem.book.id === action.payload) {
+                    return { ...shoppingCartItem, quantity: shoppingCartItem.quantity + 1 };
                 }
-                return book;
+                return shoppingCartItem;
             });
             return { ...state, shoppingCart: incrementedCart };
 
         case DECREMENT_BOOK_QUANTITY:
-            const decrementedCart = state.shoppingCart.map(book => {
-                if (book.id === action.payload) {
-                    return { ...book, quantity: Math.max(book.quantity - 1, 1) };
+            const decrementedCart = state.shoppingCart.map(shoppingCartItem => {
+                if (shoppingCartItem.book.id === action.payload) {
+                    return { ...shoppingCartItem, quantity: Math.max(shoppingCartItem.quantity - 1, 1) };
                 }
-                return book;
+                return shoppingCartItem;
             });
             return { ...state, shoppingCart: decrementedCart };
+        case SET_CART_ID:
+            return { ...state, cartId: action.payload };
+        case SET_TOTAL_PRICE:
+            return { ...state, totalPrice: action.payload };
+        case SET_SHOPPING_CART_ITEMS:
+                return { ...state, shoppingCart: action.payload };
 
         default:
             return state;

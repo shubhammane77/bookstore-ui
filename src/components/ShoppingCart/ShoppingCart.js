@@ -28,8 +28,8 @@ const ShoppingCart = () => {
           {shoppingCart.map((item) => (
             <li key={item.id} className="cart-item">
               <div>
-              <span className="cart-item-title">{item.title}</span>              
-              <span className="cart-item-author">by {item.author?.name}</span>
+              <span className="cart-item-title">{item.book.title}</span>              
+              <span className="cart-item-author">by {item.book.author?.name}</span>
               </div>
               <span className="cart-item-quantity">
                 Quantity:

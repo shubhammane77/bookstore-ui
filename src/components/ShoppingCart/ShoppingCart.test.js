@@ -15,8 +15,8 @@ const store = mockStore({
 const filledStore = mockStore({
   shoppingCart: {
     shoppingCart: [
-      { id: 1, title: 'Catch-22', quantity: 1, imageUrl: 'https://covers.openlibrary.org/b/olid/OL2637120M-L.jpg' },
-      { id: 2, title: 'The Catcher in the Rye', quantity: 2, imageUrl: 'https://covers.openlibrary.org/b/olid/OL23280426M-L.jpg' },
+     { book: { id: 1, title: 'Catch-22', quantity: 1, imageUrl: 'https://covers.openlibrary.org/b/olid/OL2637120M-L.jpg' }},
+     { book: { id: 2, title: 'The Catcher in the Rye', quantity: 2, imageUrl: 'https://covers.openlibrary.org/b/olid/OL23280426M-L.jpg' }},
     ]
   }
 });

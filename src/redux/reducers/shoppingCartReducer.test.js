@@ -1,63 +1,121 @@
-import shoppingCartReducer from './ShoppingCartReducer';
+import shoppingCartReducer from './shoppingCartReducer';
+import {
+  ADD_BOOK,
+  REMOVE_BOOK,
+  INCREMENT_BOOK_QUANTITY,
+  DECREMENT_BOOK_QUANTITY,
+  SET_CART_ID,
+  SET_TOTAL_PRICE,
+  SET_SHOPPING_CART_ITEMS
+} from '../constants/shoppingCartActionTypes';
 
-import { ADD_BOOK,REMOVE_BOOK,INCREMENT_BOOK_QUANTITY,DECREMENT_BOOK_QUANTITY } from '../constants/shoppingCartActionTypes';
+// Initial state
+const initialState = {
+  shoppingCart: [],
+  cartId: 0,
+  totalPrice: 0
+};
+
 describe('shoppingCartReducer', () => {
-    const initialState = { shoppingCart: [] };
 
-    it('should return the initial state', () => {
-        expect(shoppingCartReducer(undefined, {})).toEqual(initialState);
-    });
+  it('should return the initial state', () => {
+    expect(shoppingCartReducer(undefined, {})).toEqual(initialState);
+  });
 
-    it('should handle ADD_BOOK when the book is not in the cart', () => {
-        const book = { id: 1, title: 'Book 1' };
-        const action = { type: ADD_BOOK, payload: book };
-        const expectedState = { shoppingCart: [{ ...book, quantity: 1 }] };
+  it('should handle ADD_BOOK', () => {
+    const book = { id: 1, title: 'Test Book', unitPrice: 10 };
+    const addAction = { type: ADD_BOOK, payload: book };
 
-        expect(shoppingCartReducer(initialState, action)).toEqual(expectedState);
-    });
+    const expectedState = {
+      ...initialState,
+      shoppingCart: [{ book, quantity: 1 }]
+    };
 
-    it('should handle ADD_BOOK when the book is already in the cart', () => {
-        const book = { id: 1, title: 'Book 1', quantity: 1 };
-        const state = { shoppingCart: [book] };
-        const action = { type: ADD_BOOK, payload: { id: 1, title: 'Book 1' } };
-        const expectedState = { shoppingCart: [{ ...book, quantity: 2 }] };
+    expect(shoppingCartReducer(initialState, addAction)).toEqual(expectedState);
+  });
 
-        expect(shoppingCartReducer(state, action)).toEqual(expectedState);
-    });
+  it('should handle REMOVE_BOOK', () => {
+    const book = { id: 1, title: 'Test Book', unitPrice: 10 };
+    const removeAction = { type: REMOVE_BOOK, payload: 1 };
 
-    it('should handle REMOVE_BOOK', () => {
-        const book = { id: 1, title: 'Book 1', quantity: 1 };
-        const state = { shoppingCart: [book] };
-        const action = { type: REMOVE_BOOK, payload: 1  };
-        const expectedState = { shoppingCart: [] };
+    const stateWithBook = {
+      ...initialState,
+      shoppingCart: [{ book, quantity: 1 }]
+    };
 
-        expect(shoppingCartReducer(state, action)).toEqual(expectedState);
-    });
+    const expectedState = {
+      ...initialState,
+      shoppingCart: []
+    };
 
-    it('should handle INCREMENT_BOOK_QUANTITY', () => {
-        const book = { id: 1, title: 'Book 1', quantity: 1 };
-        const state = { shoppingCart: [book] };
-        const action = { type: INCREMENT_BOOK_QUANTITY, payload:  1  };
-        const expectedState = { shoppingCart: [{ ...book, quantity: 2 }] };
+    expect(shoppingCartReducer(stateWithBook, removeAction)).toEqual(expectedState);
+  });
 
-        expect(shoppingCartReducer(state, action)).toEqual(expectedState);
-    });
+  it('should handle INCREMENT_BOOK_QUANTITY', () => {
+    const book = { id: 1, title: 'Test Book', unitPrice: 10 };
+    const incrementAction = { type: INCREMENT_BOOK_QUANTITY, payload: 1 };
 
-    it('should handle DECREMENT_BOOK_QUANTITY', () => {
-        const book = { id: 1, title: 'Book 1', quantity: 2 };
-        const state = { shoppingCart: [book] };
-        const action = { type: DECREMENT_BOOK_QUANTITY, payload: 1  };
-        const expectedState = { shoppingCart: [{ ...book, quantity: 1 }] };
+    const stateWithBook = {
+      ...initialState,
+      shoppingCart: [{ book, quantity: 1 }]
+    };
 
-        expect(shoppingCartReducer(state, action)).toEqual(expectedState);
-    });
+    const expectedState = {
+      ...initialState,
+      shoppingCart: [{ book, quantity: 2 }]
+    };
 
-    it('should not decrement book quantity below 1', () => {
-        const book = { id: 1, title: 'Book 1', quantity: 1 };
-        const state = { shoppingCart: [book] };
-        const action = { type: DECREMENT_BOOK_QUANTITY, payload: 1 };
-        const expectedState = { shoppingCart: [{ ...book, quantity: 1 }] };
+    expect(shoppingCartReducer(stateWithBook, incrementAction)).toEqual(expectedState);
+  });
 
-        expect(shoppingCartReducer(state, action)).toEqual(expectedState);
-    });
+  it('should handle DECREMENT_BOOK_QUANTITY', () => {
+    const book = { id: 1, title: 'Test Book', unitPrice: 10 };
+    const decrementAction = { type: DECREMENT_BOOK_QUANTITY, payload: 1 };
+
+    const stateWithBook = {
+      ...initialState,
+      shoppingCart: [{ book, quantity: 2 }]
+    };
+
+    const expectedState = {
+      ...initialState,
+      shoppingCart: [{ book, quantity: 1 }]
+    };
+
+    expect(shoppingCartReducer(stateWithBook, decrementAction)).toEqual(expectedState);
+  });
+
+  it('should handle SET_CART_ID', () => {
+    const setCartIdAction = { type: SET_CART_ID, payload: 1 };
+
+    const expectedState = {
+      ...initialState,
+      cartId: 1
+    };
+
+    expect(shoppingCartReducer(initialState, setCartIdAction)).toEqual(expectedState);
+  });
+
+  it('should handle SET_TOTAL_PRICE', () => {
+    const setTotalPriceAction = { type: SET_TOTAL_PRICE, payload: 100 };
+
+    const expectedState = {
+      ...initialState,
+      totalPrice: 100
+    };
+
+    expect(shoppingCartReducer(initialState, setTotalPriceAction)).toEqual(expectedState);
+  });
+
+  it('should handle SET_SHOPPING_CART_ITEMS', () => {
+    const book = { id: 1, title: 'Test Book', unitPrice: 10 };
+    const setShoppingCartItemsAction = { type: SET_SHOPPING_CART_ITEMS, payload: [{ book, quantity: 1 }] };
+
+    const expectedState = {
+      ...initialState,
+      shoppingCart: [{ book, quantity: 1 }]
+    };
+
+    expect(shoppingCartReducer(initialState, setShoppingCartItemsAction)).toEqual(expectedState);
+  });
 });
