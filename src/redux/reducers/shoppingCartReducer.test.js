@@ -2,8 +2,6 @@ import shoppingCartReducer from './shoppingCartReducer';
 import {
   ADD_BOOK,
   REMOVE_BOOK,
-  INCREMENT_BOOK_QUANTITY,
-  DECREMENT_BOOK_QUANTITY,
   SET_CART_ID,
   SET_TOTAL_PRICE,
   SET_SHOPPING_CART_ITEMS
@@ -49,40 +47,6 @@ describe('shoppingCartReducer', () => {
     };
 
     expect(shoppingCartReducer(stateWithBook, removeAction)).toEqual(expectedState);
-  });
-
-  it('should handle INCREMENT_BOOK_QUANTITY', () => {
-    const book = { id: 1, title: 'Test Book', unitPrice: 10 };
-    const incrementAction = { type: INCREMENT_BOOK_QUANTITY, payload: 1 };
-
-    const stateWithBook = {
-      ...initialState,
-      shoppingCart: [{ book, quantity: 1 }]
-    };
-
-    const expectedState = {
-      ...initialState,
-      shoppingCart: [{ book, quantity: 2 }]
-    };
-
-    expect(shoppingCartReducer(stateWithBook, incrementAction)).toEqual(expectedState);
-  });
-
-  it('should handle DECREMENT_BOOK_QUANTITY', () => {
-    const book = { id: 1, title: 'Test Book', unitPrice: 10 };
-    const decrementAction = { type: DECREMENT_BOOK_QUANTITY, payload: 1 };
-
-    const stateWithBook = {
-      ...initialState,
-      shoppingCart: [{ book, quantity: 2 }]
-    };
-
-    const expectedState = {
-      ...initialState,
-      shoppingCart: [{ book, quantity: 1 }]
-    };
-
-    expect(shoppingCartReducer(stateWithBook, decrementAction)).toEqual(expectedState);
   });
 
   it('should handle SET_CART_ID', () => {

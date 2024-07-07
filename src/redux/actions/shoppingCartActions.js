@@ -1,4 +1,4 @@
-import { ADD_BOOK, REMOVE_BOOK, DECREMENT_BOOK_QUANTITY, INCREMENT_BOOK_QUANTITY, SET_CART_ID, SET_TOTAL_PRICE, SET_SHOPPING_CART_ITEMS } from "../constants/shoppingCartActionTypes";
+import { ADD_BOOK, REMOVE_BOOK, SET_CART_ID, SET_TOTAL_PRICE, SET_SHOPPING_CART_ITEMS,UPDATE_BOOK_QUANTITY } from "../constants/shoppingCartActionTypes";
 
 export const addBook = (book) => {
     return {
@@ -7,19 +7,6 @@ export const addBook = (book) => {
     };
 };
 
-export const incrementQuantity = (bookId) => {
-    return {
-        type: INCREMENT_BOOK_QUANTITY,
-        payload: bookId,
-    };
-};
-
-export const decrementQuantity = (bookId) => {
-    return {
-        type: DECREMENT_BOOK_QUANTITY,
-        payload: bookId,
-    };
-};
 
 export const removeBook = (bookId) => {
     return {
@@ -47,5 +34,13 @@ export const setShoppingCartItems = (shoppingCartItems) => {
     return {
         type: SET_SHOPPING_CART_ITEMS,
         payload: shoppingCartItems,
+    };
+};
+
+
+export const updateQuantity = (bookId, quantity) => {
+    return {
+        type: UPDATE_BOOK_QUANTITY,
+        payload: { bookId, quantity },
     };
 };

@@ -4,6 +4,10 @@ import '@testing-library/jest-dom/extend-expect';
 import ShoppingCart from './ShoppingCart';
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
+import { fetchData, postData } from '../../apiService';
+import { updateQuantity } from '../../redux/actions/shoppingCartActions';
+jest.mock('../../apiService');
+
 // Create a mock store
 const mockStore = configureMockStore();
 const store = mockStore({
@@ -15,11 +19,15 @@ const store = mockStore({
 const filledStore = mockStore({
   shoppingCart: {
     shoppingCart: [
-     { book: { id: 1, title: 'Catch-22', quantity: 1, imageUrl: 'https://covers.openlibrary.org/b/olid/OL2637120M-L.jpg' }},
-     { book: { id: 2, title: 'The Catcher in the Rye', quantity: 2, imageUrl: 'https://covers.openlibrary.org/b/olid/OL23280426M-L.jpg' }},
-    ]
+      { book: { id: 1, title: 'Book 1', author: { name: 'Author 1' }, unitPrice: 10 }, quantity: 2 },
+      { book: { id: 2, title: 'Book 2', author: { name: 'Author 2' }, unitPrice: 15 }, quantity: 1 },
+    ],
+    totalPrice: 35,
+    cartId: 123,
   }
 });
+store.dispatch = jest.fn();
+
 
 describe('ShoppingCart Component', () => {
 
@@ -29,10 +37,24 @@ describe('ShoppingCart Component', () => {
         <ShoppingCart />
       </Provider>
     );
-    expect(screen.getByText('Shopping Cart')).toBeInTheDocument();
-    expect(screen.getByText('Catch-22')).toBeInTheDocument();
-    expect(screen.getByText('The Catcher in the Rye')).toBeInTheDocument();
+    expect(screen.getByText('Book 1')).toBeInTheDocument();
+    expect(screen.getByText('Book 2')).toBeInTheDocument();
   });
+  it('updates item quantity in cart', async () => {
+    postData.mockResolvedValue({ totalPrice: 45 });
+
+    render(
+      <Provider store={filledStore}>
+        <ShoppingCart />
+      </Provider>
+    );
+
+    fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: '3' } });
+    const dispatch = jest.fn();
+
+    expect(postData).toHaveBeenCalledWith('/v1/cart/update', { cartId: 123, bookId: 1, quantity: 3 });
+  });
+
   test('displays empty cart message when cart is empty', () => {
     render(
       <Provider store={store}>

@@ -42,5 +42,31 @@ async function fetchData(endpoint) {
       throw error;
     }
   }
+
+  // Function to handle DELETE requests
+async function deleteData(endpoint) {
+  const url = `${apiUrl}${endpoint}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('Resource not found (404)');
+      }
+      throw new Error('Network response was not ok');
+    }
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    console.error('Error deleting data:', error);
+    throw error;
+  }
+}
   
-  export { fetchData, postData };
+  
+  export { fetchData, postData, deleteData };

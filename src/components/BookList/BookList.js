@@ -9,7 +9,6 @@ const BookList = () => {
   const dispatch = useDispatch();
   const shoppingCart = useSelector(state => state.shoppingCart.shoppingCart)
   const cartId = useSelector(state => state.shoppingCart.cartId)
-  const totalShoppingPrice = useSelector(state => state.shoppingCart.totalPrice)
   const userId = 1;
 
   const [books, setBooks] = useState([]);
@@ -69,18 +68,18 @@ const BookList = () => {
     const endpoint = '/v1/cart/update';
     try {
       var request = { cartId: cartId, bookId: book.id };
-      var totalPrice = totalShoppingPrice + book.unitPrice;
       var doesBookExistInCart = shoppingCart.find(shoppingCartItem => shoppingCartItem.book.id === book.id)
       console.log(doesBookExistInCart);
       request = {
-        ...request, totalPrice: totalPrice
-        , quantity: doesBookExistInCart ? doesBookExistInCart.quantity + 1 : 1
+        ...request
+        , quantity:
+        doesBookExistInCart ? doesBookExistInCart.quantity + 1 : 1
       }
 
       const result = await postData(endpoint, request);
       console.log('Added book successfully:', result);
       dispatch(addBook(book));
-      dispatch(setTotalPrice(totalPrice));
+      dispatch(setTotalPrice(result.totalPrice));
     } catch (error) {
       console.error('Error updating book:', error);
     }
