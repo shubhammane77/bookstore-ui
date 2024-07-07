@@ -26,7 +26,7 @@ const ShoppingCart = () => {
       ) : (
         <ul className="cart-list">
           {shoppingCart.map((item) => (
-            <li key={item.id} className="cart-item">
+            <li key={item.book.id} className="cart-item">
               <div>
               <span className="cart-item-title">{item.book.title}</span>              
               <span className="cart-item-author">by {item.book.author?.name}</span>
