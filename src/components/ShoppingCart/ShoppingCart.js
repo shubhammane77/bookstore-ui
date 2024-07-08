@@ -14,7 +14,7 @@ const ShoppingCart = () => {
   const cartId = useSelector(state => state.shoppingCart.cartId);
   const token = useSelector(state => state.user.token);
 
-  var header = {Authorization: `Bearer ${token}`}
+  var header = { Authorization: `Bearer ${token}` }
 
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const ShoppingCart = () => {
     const endpoint = '/v1/cart/update';
     try {
       const request = { cartId: cartId, bookId: book.id, quantity: quantity };
-      const result = await postData(endpoint, request,header);
+      const result = await postData(endpoint, request, header);
       dispatch(updateQuantity(book.id, quantity));
       dispatch(setTotalPrice(result.totalPrice));
     } catch (error) {
@@ -32,12 +32,18 @@ const ShoppingCart = () => {
       console.error('Error updating cart:', error);
     }
   }
+  useEffect(() => {
+    var calculatedTotalPrice = calculateTotalPrice(shoppingCart);
+    if (Math.abs(calculatedTotalPrice - totalPrice) >  0.0001) {
+      alert('Price data may be outdated.' + totalPrice + ' ' + calculatedTotalPrice);
+    }
 
+  }, [shoppingCart, totalPrice]);
 
   const deleteCart = async (cartId) => {
     const endpoint = `/v1/cart/delete?cartId=${cartId}`;
     try {
-      await deleteData(endpoint,header);
+      await deleteData(endpoint, header);
       dispatch(deleteCartAction());
     } catch (error) {
       if (error.message === '401') {
@@ -50,7 +56,7 @@ const ShoppingCart = () => {
   const removeCartItem = async (bookId, cartId) => {
     const endpoint = `/v1/cart/removeCartItem?cartId=${cartId}&bookId=${bookId}`;
     try {
-      const result = await deleteData(endpoint,header);
+      const result = await deleteData(endpoint, header);
       dispatch(removeBook(bookId));
       dispatch(setTotalPrice(result.totalPrice));
     } catch (error) {

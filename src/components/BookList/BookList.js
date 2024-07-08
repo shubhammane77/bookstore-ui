@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addBook, setCartId, setShoppingCartItems, setTotalPrice } from '../../redux/actions/shoppingCartActions';
 import './BookList.css';
 import { fetchData, postData } from '../../apiService';
-import { useNavigate } from 'react-router-dom';
 import { user_logout } from '../../redux/actions/userActions';
+
 const BookList = () => {
   const dispatch = useDispatch();
   const shoppingCart = useSelector(state => state.shoppingCart.shoppingCart)
@@ -14,7 +14,6 @@ const BookList = () => {
   const userId = useSelector(state => state.user.userId);
   const token = useSelector(state => state.user.token);
   var header = { Authorization: `Bearer ${token}` }
-  var navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
