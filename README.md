@@ -14,26 +14,25 @@ To get started with this project, follow these steps:
 
 1. Clone the repository to your local machine.
 
-   git clone https://github.com/shubhammane77/bookstore-ui.git
+        git clone https://github.com/shubhammane77/bookstore-ui.git
 
-   cd bookstore-ui
+        cd bookstore-ui
 
 2. Install all the dependencies.
 
-    npm install
+        npm install
 
 3. To start the app on 3000 port.
 
-   npm run start
+        npm run start
 
 4. Run tests with
 
-    npm run test
+        npm run test
 
 
 ## Project Structure
 
-bookstore-ui/
 
     README.md
 
