@@ -27,7 +27,7 @@
   margin-top: 10px;
 }
 
-.login-container button[type="submit"] {
+.login-container button {
   width: 100%;
   padding: 10px;
   background-color: #4caf50;
@@ -45,9 +45,17 @@
 .login-container button[type="submit"]:focus {
   outline: none;
 }
+.login-container button[type="submit"]:disabled {
+  background-color: white;
+}
 
 .login-container .form-group button[type="submit"] {
   background-color: #4caf50;
+}
+
+
+.login-container .form-group button {
+  background-color: #0b7dda;
 }
 
 .login-container .form-group button[type="submit"]:hover {

@@ -86,6 +86,7 @@ const ShoppingCart = () => {
 
   return (
     <div className="shopping-cart-container">
+            <button onClick={() => navigate('/')} className="back-button">Back To Shopping</button>
       <h2>Shopping Cart</h2>
       {shoppingCart.length === 0 ? (
         <p>Your cart is empty</p>
@@ -129,7 +130,7 @@ const ShoppingCart = () => {
 
       )}
       <div className="total-price">
-        <span>Total Price: ${totalPrice}</span>
+      {shoppingCart && shoppingCart.length > 0 && <span>Total Price: ${totalPrice}</span>}
       </div>
       {shoppingCart && shoppingCart.length > 0 && <div className="cart-actions">
         <button onClick={handleClearCart} className="clear-cart-button">Clear Cart</button>

@@ -24,6 +24,7 @@ describe('Login component', () => {
   beforeEach(() => {
     // Clear mock implementation for each test
     jest.clearAllMocks();
+    window.alert = jest.fn();
   });
 
 

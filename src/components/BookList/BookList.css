@@ -50,7 +50,7 @@ h2 {
 }
 
 .book-item button {
-  background-color: #007bff;
+  background-color: #28a745;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -60,7 +60,7 @@ h2 {
 }
 
 .book-item button:hover {
-  background-color: #0056b3;
+  background-color: #28a745;
 }
 
 .loading-overlay {
@@ -83,4 +83,32 @@ h2 {
   width: 60px;
   height: 60px;
   animation: spin 1s linear infinite;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  outline: none;
+}
+
+.pagination-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.pagination-text {
+  margin: 0 10px;
+  font-size: 14px;
 }

@@ -18,6 +18,7 @@ describe('Register component', () => {
   beforeEach(() => {
     // Clear mock implementation for each test
     jest.clearAllMocks();
+    window.alert = jest.fn();
   });
 
   it('renders Register component correctly', () => {
