@@ -35,22 +35,22 @@ To get started with this project, follow these steps:
 
 bookstore-ui/
 
-  README.md
+    README.md
 
-  node_modules/
+    node_modules/
 
-  package.json
+    package.json
 
-  src/
+    src/
 
-    components/      // React components
+      components/      // React components
 
-    redux/           // Redux-related files (actions, reducers)
+      redux/           // Redux-related files (actions, reducers)
 
-    utils/           // Utility functions
+      utils/           // Utility functions
 
-    App.css
+      App.css
 
-    App.js           // Main application component
+      App.js           // Main application component
 
-    index.js         // Entry point for React application
+      index.js         // Entry point for React application
