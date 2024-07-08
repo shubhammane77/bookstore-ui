@@ -1,0 +1,51 @@
+/* Book.css */
+
+.book-container {
+  margin-bottom: 20px;
+  display: flex; /* Ensure flex layout */
+  flex-direction: column;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+}
+
+.book-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Grow to fill available space */
+}
+
+.book-details h4 {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+  height: 60px; /* Fixed height for the title */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word; /* Ensure long words break */
+}
+
+.book-details p {
+  font-size: 14px;
+  color: #666;
+  margin: 2px 0;
+}
+
+.book-details .author {
+  font-weight: bold;
+  color: #444;
+}
+
+.book-details button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  margin-top: auto; /* Pushes the button to the bottom */
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.3s;
+}
+
+.book-details button:hover {
+  background-color: #0056b3;
+}
