@@ -26,7 +26,7 @@ To get started with this project, follow these steps:
 
         npm run start
 
-4. Run tests with
+4. Run tests.
 
         npm run test
 
