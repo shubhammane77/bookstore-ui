@@ -7,19 +7,18 @@ Welcome to the README for the BookStore UI Application repository. This reposito
 - [Installation](#installation)
 - [Usage](#usage)
 - [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Installation
 
 To get started with this project, follow these steps:
 
-1. Clone the repository to your local machine:
+1. Clone the repository to your local machine.
 
    git clone https://github.com/shubhammane77/bookstore-ui.git
+
    cd bookstore-ui
 
-2. Install all the dependencies
+2. Install all the dependencies.
 
     npm install
 
@@ -35,13 +34,23 @@ To get started with this project, follow these steps:
 ## Project Structure
 
 bookstore-ui/
+
   README.md
+
   node_modules/
+
   package.json
+
   src/
+
     components/      // React components
+
     redux/           // Redux-related files (actions, reducers)
+
     utils/           // Utility functions
+
     App.css
+
     App.js           // Main application component
+
     index.js         // Entry point for React application
