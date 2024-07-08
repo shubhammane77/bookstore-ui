@@ -4,7 +4,6 @@ import BookList from './components/BookList/BookList';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './components/Login/Login';
 import Register from './components/Register/Register';
-import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import ShoppingCart from './components/ShoppingCart/ShoppingCart';
 import Checkout from './components/Checkout/Checkout';
@@ -15,7 +14,6 @@ function App() {
   return (
     <div>
       <Header />
-      <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -25,7 +23,6 @@ function App() {
           <Route path="*" element={<NotFound />} />
 
         </Routes>
-      </AuthProvider>
     </div>
   );
 }

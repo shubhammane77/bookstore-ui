@@ -19,7 +19,7 @@ const ShoppingCart = () => {
   const navigate = useNavigate();
 
   const updateCart = async (book, quantity, cartId) => {
-    const endpoint = '/v1/cart/update';
+    const endpoint = '/v1/carts/update';
     try {
       const request = { cartId: cartId, bookId: book.id, quantity: quantity };
       const result = await postData(endpoint, request, header);
@@ -41,7 +41,7 @@ const ShoppingCart = () => {
   }, [shoppingCart, totalPrice]);
 
   const deleteCart = async (cartId) => {
-    const endpoint = `/v1/cart/delete?cartId=${cartId}`;
+    const endpoint = `/v1/carts/delete?cartId=${cartId}`;
     try {
       await deleteData(endpoint, header);
       dispatch(deleteCartAction());
@@ -54,7 +54,7 @@ const ShoppingCart = () => {
   }
 
   const removeCartItem = async (bookId, cartId) => {
-    const endpoint = `/v1/cart/removeCartItem?cartId=${cartId}&bookId=${bookId}`;
+    const endpoint = `/v1/carts/removeCartItem?cartId=${cartId}&bookId=${bookId}`;
     try {
       const result = await deleteData(endpoint, header);
       dispatch(removeBook(bookId));
@@ -86,6 +86,7 @@ const ShoppingCart = () => {
 
   return (
     <div className="shopping-cart-container">
+            <button onClick={() => navigate('/')} className="back-button">Back To Shopping</button>
       <h2>Shopping Cart</h2>
       {shoppingCart.length === 0 ? (
         <p>Your cart is empty</p>
@@ -129,7 +130,7 @@ const ShoppingCart = () => {
 
       )}
       <div className="total-price">
-        <span>Total Price: ${totalPrice}</span>
+      {shoppingCart && shoppingCart.length > 0 && <span>Total Price: ${totalPrice}</span>}
       </div>
       {shoppingCart && shoppingCart.length > 0 && <div className="cart-actions">
         <button onClick={handleClearCart} className="clear-cart-button">Clear Cart</button>

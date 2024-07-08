@@ -24,7 +24,7 @@
     border-radius: 3px;
   }
   
-  .register-container button[type="submit"] {
+  .register-container button {
     width: 100%;
     padding: 10px;
     background-color: #4caf50;
@@ -35,9 +35,20 @@
     transition: background-color 0.3s;
   }
   
+  .register-container .form-group {
+    margin-top: 10px;
+  }
   .register-container button[type="submit"]:hover {
     background-color: #45a049;
   }
+  .register-container .form-group button {
+    background-color: #0b7dda;
+  }
+
+  .register-container .form-group button[type="submit"] {
+    background-color: #45a049;
+  }
+
   
   .register-container button[type="submit"]:focus {
     outline: none;
