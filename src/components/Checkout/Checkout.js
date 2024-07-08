@@ -19,7 +19,7 @@ const Checkout = () => {
     const navigate = useNavigate();
 
     const placeOrder = async (cartId) => {
-        const endpoint = `/v1/order/placeOrder`;
+        const endpoint = `/v1/orders/placeOrder`;
         try {
             const request = {
                 cartId: cartId,

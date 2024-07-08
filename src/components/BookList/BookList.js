@@ -25,7 +25,7 @@ const BookList = () => {
   const fetchCart = async () => {
     try {
       setLoading(true);
-      const result = await fetchData(`/v1/cart/getShoppingCart?userId=${userId}`, header);
+      const result = await fetchData(`/v1/carts/getShoppingCart?userId=${userId}`, header);
       dispatch(setCartId(result.shoppingCartId));
       dispatch(setTotalPrice(result.totalPrice));
       dispatch(setShoppingCartItems(result.shoppingCartItems));
@@ -67,7 +67,7 @@ const BookList = () => {
           quantity: 1
         }]
       }
-      const endpoint = '/v1/cart/create';
+      const endpoint = '/v1/carts/create';
       const result = await postData(endpoint, request, header);
       console.log('Added book successfully:', result);
       // set redux states
@@ -86,7 +86,7 @@ const BookList = () => {
   }
 
   const updateCart = async (book) => {
-    const endpoint = '/v1/cart/update';
+    const endpoint = '/v1/carts/update';
     try {
       var request = { cartId: cartId, bookId: book.id };
       var doesBookExistInCart = shoppingCart.find(shoppingCartItem => shoppingCartItem.book.id === book.id)

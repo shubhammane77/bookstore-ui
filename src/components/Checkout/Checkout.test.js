@@ -76,7 +76,7 @@ describe('Checkout', () => {
 
         fireEvent.click(getByText(/Place Order/i));
         
-        expect(postData).toHaveBeenCalledWith('/v1/order/placeOrder', {
+        expect(postData).toHaveBeenCalledWith('/v1/orders/placeOrder', {
             cartId: cartId,
             userId: userId,
         },{"Authorization": "Bearer test"});

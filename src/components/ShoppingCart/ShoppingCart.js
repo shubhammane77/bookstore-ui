@@ -19,7 +19,7 @@ const ShoppingCart = () => {
   const navigate = useNavigate();
 
   const updateCart = async (book, quantity, cartId) => {
-    const endpoint = '/v1/cart/update';
+    const endpoint = '/v1/carts/update';
     try {
       const request = { cartId: cartId, bookId: book.id, quantity: quantity };
       const result = await postData(endpoint, request, header);
@@ -41,7 +41,7 @@ const ShoppingCart = () => {
   }, [shoppingCart, totalPrice]);
 
   const deleteCart = async (cartId) => {
-    const endpoint = `/v1/cart/delete?cartId=${cartId}`;
+    const endpoint = `/v1/carts/delete?cartId=${cartId}`;
     try {
       await deleteData(endpoint, header);
       dispatch(deleteCartAction());
@@ -54,7 +54,7 @@ const ShoppingCart = () => {
   }
 
   const removeCartItem = async (bookId, cartId) => {
-    const endpoint = `/v1/cart/removeCartItem?cartId=${cartId}&bookId=${bookId}`;
+    const endpoint = `/v1/carts/removeCartItem?cartId=${cartId}&bookId=${bookId}`;
     try {
       const result = await deleteData(endpoint, header);
       dispatch(removeBook(bookId));
