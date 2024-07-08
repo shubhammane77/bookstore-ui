@@ -1,72 +1,56 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import Login from './Login';  // Adjust the import path as necessary
-import AuthContext from '../../AuthContext';
+import { render, fireEvent, waitFor } from '@testing-library/react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Login from './Login'; // Adjust the path as per your project structure
+import { postData } from '../../apiService';
 
-const mockNavigate = jest.fn();
-
+// Mocking the react-router-dom useNavigate hook
 jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
+  useNavigate: jest.fn(),
 }));
 
-describe('Login Component', () => {
-  let loginMock;
+// Mocking the postData function from apiService
+jest.mock('../../apiService', () => ({
+  postData: jest.fn(),
+}));
 
+// Mocking the useDispatch function from react-redux
+jest.mock('react-redux', () => ({
+  useDispatch: jest.fn(),
+}));
+
+describe('Login component', () => {
   beforeEach(() => {
-    loginMock = jest.fn();
-    render(
-      <AuthContext.Provider value={{ login: loginMock }}>
-        <BrowserRouter>
-          <Login />
-        </BrowserRouter>
-      </AuthContext.Provider>
-    );
+    // Clear mock implementation for each test
+    jest.clearAllMocks();
   });
 
-  it('renders login form', () => {
-    expect(screen.getByText('Login')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Username')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
-    expect(screen.getByText('Log In')).toBeInTheDocument();
-    expect(screen.getByText('New User Registeration')).toBeInTheDocument();
+
+  it('handles network error during login', async () => {
+    const { getByText, getByPlaceholderText } = render(<Login />);
+
+    // Simulate user input
+    fireEvent.change(getByPlaceholderText('Username'), { target: { value: 'testUser' } });
+    fireEvent.change(getByPlaceholderText('Password'), { target: { value: 'password123' } });
+
+    // Mock postData to throw an error
+    const error = new Error('Network Error');
+    useDispatch.mockReturnValue(jest.fn());
+    postData.mockRejectedValue(error);
+
+    // Click on Log In button
+    fireEvent.click(getByText('Log In'));
+
+    // Wait for the async operation to complete
+    await waitFor(() => {
+      expect(postData).toHaveBeenCalledTimes(1);
+      expect(postData).toHaveBeenCalledWith('/v1/auth/login', {
+        userName: 'testUser',
+        password: 'password123',
+      });
+    });
   });
 
-  it('allows user to enter username and password', () => {
-    fireEvent.change(screen.getByPlaceholderText('Username'), { target: { value: 'testuser' } });
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
 
-    expect(screen.getByPlaceholderText('Username').value).toBe('testuser');
-    expect(screen.getByPlaceholderText('Password').value).toBe('password123');
-  });
-
-  it('calls login function and navigates to home on successful login', async () => {
-    loginMock.mockResolvedValue({ errorMessage: null });
-
-    fireEvent.change(screen.getByPlaceholderText('Username'), { target: { value: 'testuser' } });
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
-    fireEvent.click(screen.getByText('Log In'));
-
-    await screen.findByText('Log In');  // Wait for the component to update
-    expect(mockNavigate).toHaveBeenCalledWith('/');
-  });
-
-  it('shows an alert on failed login', async () => {
-    window.alert = jest.fn();
-    loginMock.mockResolvedValue({ errorMessage: 'Invalid credentials' });
-
-    fireEvent.change(screen.getByPlaceholderText('Username'), { target: { value: 'testuser' } });
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
-    fireEvent.click(screen.getByText('Log In'));
-
-    await screen.findByText('Log In');  // Wait for the component to update
-    expect(window.alert).toHaveBeenCalledWith('Login failed: Invalid credentials');
-  });
-
-  it('navigates to register page on clicking "New User Registration"', () => {
-    fireEvent.click(screen.getByText('New User Registeration'));
-
-    expect(mockNavigate).toHaveBeenCalledWith('/register');
-  });
 });

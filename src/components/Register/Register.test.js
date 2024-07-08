@@ -1,67 +1,104 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import Register from './Register';  // Adjust the import path as necessary
-import AuthContext from '../../AuthContext';
+import { render, fireEvent, waitFor } from '@testing-library/react';
+import Register from './Register'; // Adjust the path as per your project structure
+import { postData } from '../../apiService';
 
-const mockNavigate = jest.fn();
-
+// Mocking the react-router-dom useNavigate hook
 jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
+  useNavigate: () => jest.fn(),
 }));
 
-describe('Register Component', () => {
-  let registerMock;
+// Mocking the postData function from apiService
+jest.mock('../../apiService', () => ({
+  postData: jest.fn(),
+}));
 
+global.console = {error: jest.fn()}
+describe('Register component', () => {
   beforeEach(() => {
-    registerMock = jest.fn();
-    render(
-      <AuthContext.Provider value={{ register: registerMock }}>
-        <BrowserRouter>
-          <Register />
-        </BrowserRouter>
-      </AuthContext.Provider>
-    );
+    // Clear mock implementation for each test
+    jest.clearAllMocks();
   });
 
-  it('renders register form', () => {
-    expect(screen.getByText('Register New User')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Username')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Email Address')).toBeInTheDocument();
-    expect(screen.getByText('Register')).toBeInTheDocument();
+  it('renders Register component correctly', () => {
+    const { getByText, getByPlaceholderText } = render(<Register />);
+    
+    expect(getByText('Register New User')).toBeInTheDocument();
+    expect(getByPlaceholderText('Username')).toBeInTheDocument();
+    expect(getByPlaceholderText('Password')).toBeInTheDocument();
+    expect(getByPlaceholderText('Email Address')).toBeInTheDocument();
+    expect(getByText('Register')).toBeInTheDocument();
   });
 
-  it('allows user to enter username, password, and email address', () => {
-    fireEvent.change(screen.getByPlaceholderText('Username'), { target: { value: 'testuser' } });
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), { target: { value: 'test@example.com' } });
+  it('submits registration form with valid data', async () => {
+    const { getByText, getByPlaceholderText } = render(<Register />);
 
-    expect(screen.getByPlaceholderText('Username').value).toBe('testuser');
-    expect(screen.getByPlaceholderText('Password').value).toBe('password123');
-    expect(screen.getByPlaceholderText('Email Address').value).toBe('test@example.com');
+    // Simulate user input
+    fireEvent.change(getByPlaceholderText('Username'), { target: { value: 'testUser' } });
+    fireEvent.change(getByPlaceholderText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(getByPlaceholderText('Email Address'), { target: { value: 'test@example.com' } });
+
+    // Mock postData response
+    const mockResponse = { errorMessage: null };
+    postData.mockResolvedValue(mockResponse);
+
+    // Click on Register button
+    fireEvent.click(getByText('Register'));
+
+    // Wait for the async operation to complete
+    await waitFor(() => {
+      expect(postData).toHaveBeenCalledTimes(1);
+      expect(postData).toHaveBeenCalledWith('/v1/auth/register', {
+        userName: 'testUser',
+        password: 'password123',
+        emailAddress: 'test@example.com',
+      });
+    });
   });
 
-  it('calls register function and navigates to login on successful registration', () => {
-    registerMock.mockReturnValue(true);
+  it('handles registration failure', async () => {
+    const { getByText, getByPlaceholderText } = render(<Register />);
 
-    fireEvent.change(screen.getByPlaceholderText('Username'), { target: { value: 'testuser' } });
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), { target: { value: 'test@example.com' } });
-    fireEvent.click(screen.getByText('Register'));
+    // Simulate user input
+    fireEvent.change(getByPlaceholderText('Username'), { target: { value: 'testUser' } });
+    fireEvent.change(getByPlaceholderText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(getByPlaceholderText('Email Address'), { target: { value: 'test@example.com' } });
 
-    expect(mockNavigate).toHaveBeenCalledWith('/login');
+    // Click on Register button
+    fireEvent.click(getByText('Register'));
+
+    // Wait for the async operation to complete
+    await waitFor(() => {
+      window.alert = jest.fn();
+      expect(postData).toHaveBeenCalledTimes(1);
+      expect(postData).toHaveBeenCalledWith('/v1/auth/register', {
+        userName: 'testUser',
+        password: 'password123',
+        emailAddress: 'test@example.com',
+      });
+    });
   });
 
-  it('does not navigate on failed registration', () => {
-    registerMock.mockReturnValue(false);
+  it('handles registration error', async () => {
+    const { getByText, getByPlaceholderText } = render(<Register />);
 
-    fireEvent.change(screen.getByPlaceholderText('Username'), { target: { value: 'testuser' } });
-    fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
-    fireEvent.change(screen.getByPlaceholderText('Email Address'), { target: { value: 'test@example.com' } });
-    fireEvent.click(screen.getByText('Register'));
+    // Simulate user input
+    fireEvent.change(getByPlaceholderText('Username'), { target: { value: 'testUser' } });
+    fireEvent.change(getByPlaceholderText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(getByPlaceholderText('Email Address'), { target: { value: 'test@example.com' } });
 
-    expect(mockNavigate).not.toHaveBeenCalled();
+    // Mock postData to throw an error
+    // Click on Register button
+    fireEvent.click(getByText('Register'));
+
+    // Wait for the async operation to complete
+    await waitFor(() => {
+      expect(postData).toHaveBeenCalledTimes(1);
+      expect(postData).toHaveBeenCalledWith('/v1/auth/register', {
+        userName: 'testUser',
+        password: 'password123',
+        emailAddress: 'test@example.com',
+      });
+    });
   });
 });

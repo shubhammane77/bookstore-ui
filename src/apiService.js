@@ -11,7 +11,7 @@ async function fetchData(endpoint, headers = {}) {
     });
 
     if (!response.ok) {
-      if (response.status === 404 || response.status == 401) {
+      if (response.status === 404 || response.status === 401) {
         throw new Error(response.status);
       }
       throw new Error('Network response was not ok');
@@ -38,10 +38,10 @@ async function postData(endpoint, data, headers = {}) {
     });
 
     if (!response.ok) {
-      if (response.status === 404 || response.status == 401) {
+      if (response.status === 404 || response.status === 401) {
         throw new Error(response.status);
       }
-      throw new Error('Network response was not ok');
+      throw new Error('API call failed');
     }
 
     const responseData = await response.json();
@@ -66,7 +66,7 @@ async function deleteData(endpoint, headers = {}) {
     });
 
     if (!response.ok) {
-      if (response.status === 404 || response.status == 401) {
+      if (response.status === 404 || response.status === 401) {
         throw new Error(response.status);
       }
       throw new Error('Network response was not ok');
