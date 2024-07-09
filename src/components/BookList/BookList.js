@@ -2,10 +2,10 @@ import Book from '../Book/Book';
 import { useEffect, useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import { useDispatch, useSelector } from "react-redux";
-import { addBook, setCartId, setShoppingCartItems, setTotalPrice } from '../../redux/actions/ShoppingCartActions';
+import { addBook, setCartId, setShoppingCartItems, setTotalPrice } from '../../redux/actions/shoppingCartActions';
 import './BookList.css';
 import { fetchData, postData } from '../../api/apiService';
-import { user_logout } from '../../redux/actions/UserActions';
+import { user_logout } from '../../redux/actions/userActions';
 import { CREATE_CART_ENDPOINT, GET_SHOPPING_CART_ENDPOINT, SEARCH_BOOK_ENDPOINT, UPDATE_CART_ENDPOINT } from '../../api/endpoints';
 
 const BookList = () => {

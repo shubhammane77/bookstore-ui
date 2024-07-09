@@ -4,7 +4,7 @@ import './Login.css'
 import { useNavigate } from 'react-router-dom';
 import { postData } from '../../api/apiService';
 import { useDispatch } from 'react-redux';
-import { user_login } from '../../redux/actions/UserActions';
+import { user_login } from '../../redux/actions/userActions';
 import { LOGIN_USER_ENDPOINT } from '../../api/endpoints';
 const Login = () => {
     const navigate = useNavigate();

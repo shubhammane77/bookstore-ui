@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeBook, updateQuantity, setTotalPrice, deleteCartAction } from '../../redux/actions/ShoppingCartActions';
+import { removeBook, updateQuantity, setTotalPrice, deleteCartAction } from '../../redux/actions/shoppingCartActions';
 import './ShoppingCart.css';
 import { calculateTotalPrice } from '../../utils/util';
 import { deleteData, postData } from '../../api/apiService';
 import { useNavigate } from 'react-router-dom';
-import { user_logout } from '../../redux/actions/UserActions';
+import { user_logout } from '../../redux/actions/userActions';
 import { DELETE_CART_ENDPOINT, UPDATE_CART_ENDPOINT, REMOVE_CART_ITEM_ENDPOINT } from '../../api/endpoints';
 const ShoppingCart = () => {
 

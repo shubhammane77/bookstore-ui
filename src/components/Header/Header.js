@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';  // Import the CSS file
 import { useSelector, useDispatch } from 'react-redux';
-import { user_logout } from '../../redux/actions/UserActions';
+import { user_logout } from '../../redux/actions/userActions';
 
 const Header = () => {
     const userId = useSelector(state => state.user.userId);

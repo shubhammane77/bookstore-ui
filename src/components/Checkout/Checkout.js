@@ -3,9 +3,9 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './Checkout.css';
 import { postData } from '../../api/apiService';
-import { deleteCartAction } from '../../redux/actions/ShoppingCartActions';
+import { deleteCartAction } from '../../redux/actions/shoppingCartActions';
 import { useNavigate } from 'react-router-dom';
-import { user_logout } from '../../redux/actions/UserActions';
+import { user_logout } from '../../redux/actions/userActions';
 import { PLACE_ORDER_ENDPOINT } from '../../api/endpoints';
 
 const Checkout = () => {
