@@ -1,41 +1,42 @@
-import shoppingCartReducer from './shoppingCartReducer';
+import ShoppingCartReducer from './ShoppingCartReducer';
 import {
   ADD_BOOK,
   REMOVE_BOOK,
   SET_CART_ID,
   SET_TOTAL_PRICE,
   SET_SHOPPING_CART_ITEMS
-} from '../constants/shoppingCartActionTypes';
+} from '../../constants/ActionTypes';
 
-// Initial state
-const initialState = {
-  shoppingCart: [],
-  cartId: 0,
-  totalPrice: 0
-};
 
-describe('shoppingCartReducer', () => {
+describe('ShoppingCartReducer', () => {
+  let initialState;
+  let book;
+  beforeEach(() => {
+    // Initial state
+    initialState = {
+      shoppingCart: [],
+      cartId: 0,
+      totalPrice: 0
+    };
+    book = { id: 1, title: 'Test Book', unitPrice: 10 };
 
+  })
   it('should return the initial state', () => {
-    expect(shoppingCartReducer(undefined, {})).toEqual(initialState);
+    expect(ShoppingCartReducer(undefined, {})).toEqual(initialState);
   });
 
   it('should handle ADD_BOOK', () => {
-    const book = { id: 1, title: 'Test Book', unitPrice: 10 };
     const addAction = { type: ADD_BOOK, payload: book };
-
     const expectedState = {
       ...initialState,
       shoppingCart: [{ book, quantity: 1 }]
     };
 
-    expect(shoppingCartReducer(initialState, addAction)).toEqual(expectedState);
+    expect(ShoppingCartReducer(initialState, addAction)).toEqual(expectedState);
   });
 
   it('should handle REMOVE_BOOK', () => {
-    const book = { id: 1, title: 'Test Book', unitPrice: 10 };
     const removeAction = { type: REMOVE_BOOK, payload: 1 };
-
     const stateWithBook = {
       ...initialState,
       shoppingCart: [{ book, quantity: 1 }]
@@ -46,7 +47,7 @@ describe('shoppingCartReducer', () => {
       shoppingCart: []
     };
 
-    expect(shoppingCartReducer(stateWithBook, removeAction)).toEqual(expectedState);
+    expect(ShoppingCartReducer(stateWithBook, removeAction)).toEqual(expectedState);
   });
 
   it('should handle SET_CART_ID', () => {
@@ -57,7 +58,7 @@ describe('shoppingCartReducer', () => {
       cartId: 1
     };
 
-    expect(shoppingCartReducer(initialState, setCartIdAction)).toEqual(expectedState);
+    expect(ShoppingCartReducer(initialState, setCartIdAction)).toEqual(expectedState);
   });
 
   it('should handle SET_TOTAL_PRICE', () => {
@@ -68,11 +69,10 @@ describe('shoppingCartReducer', () => {
       totalPrice: 100
     };
 
-    expect(shoppingCartReducer(initialState, setTotalPriceAction)).toEqual(expectedState);
+    expect(ShoppingCartReducer(initialState, setTotalPriceAction)).toEqual(expectedState);
   });
 
   it('should handle SET_SHOPPING_CART_ITEMS', () => {
-    const book = { id: 1, title: 'Test Book', unitPrice: 10 };
     const setShoppingCartItemsAction = { type: SET_SHOPPING_CART_ITEMS, payload: [{ book, quantity: 1 }] };
 
     const expectedState = {
@@ -80,6 +80,6 @@ describe('shoppingCartReducer', () => {
       shoppingCart: [{ book, quantity: 1 }]
     };
 
-    expect(shoppingCartReducer(initialState, setShoppingCartItemsAction)).toEqual(expectedState);
+    expect(ShoppingCartReducer(initialState, setShoppingCartItemsAction)).toEqual(expectedState);
   });
 });

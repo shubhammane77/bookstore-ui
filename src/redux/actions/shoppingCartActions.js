@@ -1,4 +1,4 @@
-import { ADD_BOOK, REMOVE_BOOK, SET_CART_ID, SET_TOTAL_PRICE, SET_SHOPPING_CART_ITEMS,UPDATE_BOOK_QUANTITY, DELETE_CART } from "../constants/shoppingCartActionTypes";
+import { ADD_BOOK, REMOVE_BOOK, SET_CART_ID, SET_TOTAL_PRICE, SET_SHOPPING_CART_ITEMS,UPDATE_BOOK_QUANTITY, DELETE_CART } from "../constants/ActionTypes";
 
 export const addBook = (book) => {
     return {
@@ -6,7 +6,6 @@ export const addBook = (book) => {
         payload: book,
     };
 };
-
 
 export const removeBook = (bookId) => {
     return {

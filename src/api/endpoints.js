@@ -1,0 +1,9 @@
+export const UPDATE_CART_ENDPOINT = '/v1/carts/update';
+export const DELETE_CART_ENDPOINT = '/v1/carts/delete';
+export const REMOVE_CART_ITEM_ENDPOINT = '/v1/carts/removeCartItem';
+export const REGISTER_USER_ENDPOINT = '/v1/auth/register';
+export const LOGIN_USER_ENDPOINT = '/v1/auth/login';
+export const PLACE_ORDER_ENDPOINT = '/v1/orders/placeOrder';
+export const GET_SHOPPING_CART_ENDPOINT = '/v1/carts/getShoppingCart';
+export const SEARCH_BOOK_ENDPOINT = '/v1/books/search';
+export const CREATE_CART_ENDPOINT = '/v1/carts/create';

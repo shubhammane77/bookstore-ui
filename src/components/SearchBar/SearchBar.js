@@ -1,6 +1,8 @@
 import React from 'react';
 import './SearchBar.css';
-const SearchBar = ({ searchQuery, setSearchQuery,handleSearch }) => {
+import PropTypes from 'prop-types';
+
+const SearchBar = ({ searchQuery, setSearchQuery, handleSearch }) => {
   return (
     <div className="search-container">
       <input
@@ -15,6 +17,12 @@ const SearchBar = ({ searchQuery, setSearchQuery,handleSearch }) => {
       </button>
     </div>
   );
+};
+
+SearchBar.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  setSearchQuery: PropTypes.func.isRequired,
+  handleSearch: PropTypes.func.isRequired,
 };
 
 export default SearchBar;

@@ -2,10 +2,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './Checkout.css';
-import { postData } from '../../apiService';
-import { deleteCartAction } from '../../redux/actions/shoppingCartActions';
+import { postData } from '../../api/apiService';
+import { deleteCartAction } from '../../redux/actions/ShoppingCartActions';
 import { useNavigate } from 'react-router-dom';
-import { user_logout } from '../../redux/actions/userActions';
+import { user_logout } from '../../redux/actions/UserActions';
+import { PLACE_ORDER_ENDPOINT } from '../../api/endpoints';
 
 const Checkout = () => {
     const dispatch = useDispatch();
@@ -14,12 +15,12 @@ const Checkout = () => {
     const cartId = useSelector((state) => state.shoppingCart.cartId);
     const userId = useSelector(state => state.user.userId);
     const token = useSelector(state => state.user.token);
-    var header = { Authorization: `Bearer ${token}` }
 
     const navigate = useNavigate();
 
-    const placeOrder = async (cartId) => {
-        const endpoint = `/v1/orders/placeOrder`;
+    const placeOrder = async (cartId,userId) => {
+        var header = { Authorization: `Bearer ${token}` }
+        const endpoint = PLACE_ORDER_ENDPOINT;
         try {
             const request = {
                 cartId: cartId,
@@ -29,19 +30,19 @@ const Checkout = () => {
             await postData(endpoint, request, header);
             dispatch(deleteCartAction());
             navigate('/');
-            alert('Order Placed.');
+            alert('Order placed successfully.');
         } catch (error) {
             if (error.message === '401') {
                 dispatch(user_logout());
                 return;
               }
             console.error('Error while placing order:', error);
-            alert('Order Error.')
+            alert('Error while placing order: ' + error.message);
         }
     }
 
     const handlePlaceOrder = () => {
-        placeOrder(cartId);
+        placeOrder(cartId,userId);
     };
 
     return (

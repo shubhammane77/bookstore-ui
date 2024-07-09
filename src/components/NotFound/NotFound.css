@@ -1,0 +1,15 @@
+.notFoundContainer {
+    text-align: center;
+    padding: 50px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .notFoundTitle {
+    font-size: 3em;
+    color: #ff0000;
+  }
+  
+  .notFoundMessage {
+    font-size: 1.5em;
+    color: #333;
+  }

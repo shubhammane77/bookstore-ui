@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT } from "../constants/userActionTypes";
+import { LOGIN, LOGOUT } from "../constants/ActionTypes";
 
 export const user_login = (auth) => {
     return {

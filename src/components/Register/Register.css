@@ -1,56 +1,84 @@
 /* Register.css */
 
 .register-container {
-    max-width: 400px;
-    margin: auto;
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.register-container h2 {
+  text-align: center;
+  color: #333;
+}
+
+.register-container input[type="text"],
+.register-container input[type="password"],
+.register-container input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.register-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.register-container .form-group {
+  margin-top: 10px;
+}
+
+.register-container button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.register-container .form-group button {
+  background-color: #0b7dda;
+}
+
+.register-container .form-group button[type="submit"] {
+  background-color: #45a049;
+}
+
+
+.register-container button[type="submit"]:focus {
+  outline: none;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    background: white;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-  
-  .register-container h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .register-container input[type="text"],
-  .register-container input[type="password"],
-  .register-container input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
-  
-  .register-container button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .register-container .form-group {
-    margin-top: 10px;
-  }
-  .register-container button[type="submit"]:hover {
-    background-color: #45a049;
-  }
-  .register-container .form-group button {
-    background-color: #0b7dda;
-  }
-
-  .register-container .form-group button[type="submit"] {
-    background-color: #45a049;
-  }
-
-  
-  .register-container button[type="submit"]:focus {
-    outline: none;
-  }
-  
+    border-radius: 10px;
+    max-width: 500px;
+    width: 80%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

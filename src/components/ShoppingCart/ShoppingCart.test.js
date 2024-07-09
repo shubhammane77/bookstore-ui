@@ -1,13 +1,13 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ShoppingCart from './ShoppingCart';
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
-import { fetchData, postData } from '../../apiService';
-import { updateQuantity } from '../../redux/actions/shoppingCartActions';
-jest.mock('../../apiService');
-
+import { deleteData, postData } from '../../api/apiService';
+import { UPDATE_CART_ENDPOINT } from '../../api/endpoints';
+jest.mock('../../api/apiService');
+window.alert = jest.fn();
 // Create a mock store
 const mockStore = configureMockStore();
 const store = mockStore({
@@ -67,7 +67,7 @@ describe('ShoppingCart Component', () => {
     fireEvent.change(screen.getAllByRole('combobox')[0], { target: { value: '3' } });
     const dispatch = jest.fn();
 
-    expect(postData).toHaveBeenCalledWith('/v1/carts/update', { cartId: 123, bookId: 1, quantity: 3 },{"Authorization": "Bearer test"});
+    expect(postData).toHaveBeenCalledWith(UPDATE_CART_ENDPOINT, { cartId: 123, bookId: 1, quantity: 3 }, { "Authorization": "Bearer test" });
   });
 
   test('displays empty cart message when cart is empty', () => {
@@ -75,8 +75,44 @@ describe('ShoppingCart Component', () => {
       <Provider store={store}>
         <ShoppingCart />
       </Provider>
-
     );
     expect(screen.getByText('Your cart is empty')).toBeInTheDocument();
+  });
+
+  test('Navigate Back to shopping', async () => {
+    render(
+      <Provider store={store}>
+        <ShoppingCart />
+      </Provider>
+    );
+    fireEvent.click(screen.getByText('Back To Shopping'));
+    await waitFor(() => {
+      expect(mockUsedNavigate).toHaveBeenCalledWith('/')
+    });
+  });
+
+  test('Remove cart item', async () => {
+    render(
+      <Provider store={filledStore}>
+        <ShoppingCart />
+      </Provider>
+    );
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByText('Remove')[0]);
+      expect(deleteData).toHaveBeenCalled()
+    });
+  });
+
+
+  test('Delete cart', async () => {
+    render(
+      <Provider store={filledStore}>
+        <ShoppingCart />
+      </Provider>
+    );
+    await waitFor(() => {
+      fireEvent.click(screen.getByText('Clear Cart'));
+      expect(deleteData).toHaveBeenCalled()
+    });
   });
 });

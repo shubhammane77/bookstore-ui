@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeBook, updateQuantity, setTotalPrice, deleteCartAction } from '../../redux/actions/shoppingCartActions';
+import { removeBook, updateQuantity, setTotalPrice, deleteCartAction } from '../../redux/actions/ShoppingCartActions';
 import './ShoppingCart.css';
 import { calculateTotalPrice } from '../../utils/util';
-import { deleteData, postData } from '../../apiService';
+import { deleteData, postData } from '../../api/apiService';
 import { useNavigate } from 'react-router-dom';
-import { user_logout } from '../../redux/actions/userActions';
+import { user_logout } from '../../redux/actions/UserActions';
+import { DELETE_CART_ENDPOINT, UPDATE_CART_ENDPOINT, REMOVE_CART_ITEM_ENDPOINT } from '../../api/endpoints';
 const ShoppingCart = () => {
 
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const ShoppingCart = () => {
   const navigate = useNavigate();
 
   const updateCart = async (book, quantity, cartId) => {
-    const endpoint = '/v1/carts/update';
+    const endpoint = UPDATE_CART_ENDPOINT;
     try {
       const request = { cartId: cartId, bookId: book.id, quantity: quantity };
       const result = await postData(endpoint, request, header);
@@ -29,19 +30,20 @@ const ShoppingCart = () => {
       if (error.message === '401') {
         dispatch(user_logout());
       }
-      console.error('Error updating cart:', error);
+      alert('Error updating cart: ', error.message);
     }
   }
   useEffect(() => {
     var calculatedTotalPrice = calculateTotalPrice(shoppingCart);
-    if (Math.abs(calculatedTotalPrice - totalPrice) >  0.0001) {
-      alert('Price data may be outdated.' + totalPrice + ' ' + calculatedTotalPrice);
+    if (Math.abs(calculatedTotalPrice - totalPrice) > 0.0001) {
+      alert('Price data may be outdated. Refreshing page.' + totalPrice + ' ' + calculatedTotalPrice);
+      navigate('/');
     }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shoppingCart, totalPrice]);
 
   const deleteCart = async (cartId) => {
-    const endpoint = `/v1/carts/delete?cartId=${cartId}`;
+    const endpoint = `${DELETE_CART_ENDPOINT}?cartId=${cartId}`;
     try {
       await deleteData(endpoint, header);
       dispatch(deleteCartAction());
@@ -49,12 +51,12 @@ const ShoppingCart = () => {
       if (error.message === '401') {
         dispatch(user_logout());
       }
-      console.error('Error deleting cart:', error);
+      alert('Error deleting cart: ', error.message);
     }
   }
 
   const removeCartItem = async (bookId, cartId) => {
-    const endpoint = `/v1/carts/removeCartItem?cartId=${cartId}&bookId=${bookId}`;
+    const endpoint = `${REMOVE_CART_ITEM_ENDPOINT}?cartId=${cartId}&bookId=${bookId}`;
     try {
       const result = await deleteData(endpoint, header);
       dispatch(removeBook(bookId));
@@ -63,7 +65,7 @@ const ShoppingCart = () => {
       if (error.message === '401') {
         dispatch(user_logout());
       }
-      console.error('Error removing cart item:', error);
+      alert('Error removing cart item: ', error.message);
     }
   }
 
@@ -86,7 +88,7 @@ const ShoppingCart = () => {
 
   return (
     <div className="shopping-cart-container">
-            <button onClick={() => navigate('/')} className="back-button">Back To Shopping</button>
+      <button onClick={() => navigate('/')} className="back-button">Back To Shopping</button>
       <h2>Shopping Cart</h2>
       {shoppingCart.length === 0 ? (
         <p>Your cart is empty</p>
@@ -130,7 +132,7 @@ const ShoppingCart = () => {
 
       )}
       <div className="total-price">
-      {shoppingCart && shoppingCart.length > 0 && <span>Total Price: ${totalPrice}</span>}
+        {shoppingCart && shoppingCart.length > 0 && <span>Total Price: ${totalPrice}</span>}
       </div>
       {shoppingCart && shoppingCart.length > 0 && <div className="cart-actions">
         <button onClick={handleClearCart} className="clear-cart-button">Clear Cart</button>
