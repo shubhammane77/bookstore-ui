@@ -1,19 +1,21 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import Register from './Register'; // Adjust the path as per your project structure
-import { postData } from '../../apiService';
+import { postData } from '../../api/apiService';
+import { REGISTER_USER_ENDPOINT } from '../../api/endpoints';
 
-// Mocking the react-router-dom useNavigate hook
+const mockUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-  useNavigate: () => jest.fn(),
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockUsedNavigate,
 }));
 
 // Mocking the postData function from apiService
-jest.mock('../../apiService', () => ({
+jest.mock('../../api/apiService', () => ({
   postData: jest.fn(),
 }));
 
-global.console = {error: jest.fn()}
+global.console = { error: jest.fn() }
 describe('Register component', () => {
   beforeEach(() => {
     // Clear mock implementation for each test
@@ -23,7 +25,7 @@ describe('Register component', () => {
 
   it('renders Register component correctly', () => {
     const { getByText, getByPlaceholderText } = render(<Register />);
-    
+
     expect(getByText('Register New User')).toBeInTheDocument();
     expect(getByPlaceholderText('Username')).toBeInTheDocument();
     expect(getByPlaceholderText('Password')).toBeInTheDocument();
@@ -49,57 +51,39 @@ describe('Register component', () => {
     // Wait for the async operation to complete
     await waitFor(() => {
       expect(postData).toHaveBeenCalledTimes(1);
-      expect(postData).toHaveBeenCalledWith('/v1/auth/register', {
+      expect(postData).toHaveBeenCalledWith(REGISTER_USER_ENDPOINT, {
         userName: 'testUser',
         password: 'password123',
         emailAddress: 'test@example.com',
       });
+      expect(mockUsedNavigate).toHaveBeenCalledWith('/login')
     });
-  });
+    });
 
-  it('handles registration failure', async () => {
-    const { getByText, getByPlaceholderText } = render(<Register />);
+    it('handles registration failure', async () => {
+      const { getByText, getByPlaceholderText } = render(<Register />);
 
-    // Simulate user input
-    fireEvent.change(getByPlaceholderText('Username'), { target: { value: 'testUser' } });
-    fireEvent.change(getByPlaceholderText('Password'), { target: { value: 'password123' } });
-    fireEvent.change(getByPlaceholderText('Email Address'), { target: { value: 'test@example.com' } });
+      // Simulate user input
+      fireEvent.change(getByPlaceholderText('Username'), { target: { value: 'testUser' } });
+      fireEvent.change(getByPlaceholderText('Password'), { target: { value: 'password123' } });
+      fireEvent.change(getByPlaceholderText('Email Address'), { target: { value: 'test@example.com' } });
+      const mockResponse = { errorMessage: 'User already exists' };
+      postData.mockResolvedValue(mockResponse);
 
-    // Click on Register button
-    fireEvent.click(getByText('Register'));
-
-    // Wait for the async operation to complete
-    await waitFor(() => {
-      window.alert = jest.fn();
-      expect(postData).toHaveBeenCalledTimes(1);
-      expect(postData).toHaveBeenCalledWith('/v1/auth/register', {
-        userName: 'testUser',
-        password: 'password123',
-        emailAddress: 'test@example.com',
+      // Click on Register button
+      fireEvent.click(getByText('Register'));
+      // Wait for the async operation to complete
+      await waitFor(() => {
+        window.alert = jest.fn();
+         expect(mockUsedNavigate).not.toHaveBeenCalled()
       });
     });
-  });
-
-  it('handles registration error', async () => {
-    const { getByText, getByPlaceholderText } = render(<Register />);
-
-    // Simulate user input
-    fireEvent.change(getByPlaceholderText('Username'), { target: { value: 'testUser' } });
-    fireEvent.change(getByPlaceholderText('Password'), { target: { value: 'password123' } });
-    fireEvent.change(getByPlaceholderText('Email Address'), { target: { value: 'test@example.com' } });
-
-    // Mock postData to throw an error
-    // Click on Register button
-    fireEvent.click(getByText('Register'));
-
-    // Wait for the async operation to complete
-    await waitFor(() => {
-      expect(postData).toHaveBeenCalledTimes(1);
-      expect(postData).toHaveBeenCalledWith('/v1/auth/register', {
-        userName: 'testUser',
-        password: 'password123',
-        emailAddress: 'test@example.com',
+    it('handles login navigation', async () => {
+      const { getByText } = render(<Register />);
+      fireEvent.click(getByText('Back To Login'));
+      await waitFor(() => {
+        expect(mockUsedNavigate).toHaveBeenCalledWith('/login')
       });
     });
+
   });
-});

@@ -49,3 +49,9 @@
     margin-left: auto;
     transition: color 0.3s;
 }
+
+.welcome-message {
+    margin-right: 20px;
+    font-size: 16px;
+    background-color: #f8f9fa;
+}

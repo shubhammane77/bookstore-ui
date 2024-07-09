@@ -3,10 +3,10 @@ import { render, screen, fireEvent, waitFor, getByText } from '@testing-library/
 import '@testing-library/jest-dom/extend-expect';
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
-import { fetchData, postData } from '../../apiService';
+import { fetchData } from '../../api/apiService';
 import BookList from './BookList';
-jest.mock('../../apiService');
-
+import { GET_SHOPPING_CART_ENDPOINT, SEARCH_BOOK_ENDPOINT } from '../../api/endpoints';
+jest.mock('../../api/apiService');
 
 describe('BookList Component', () => {
     let store;
@@ -24,16 +24,16 @@ describe('BookList Component', () => {
                 userName: 'testName'
             }
         });
-        fetchData.mockImplementation((url,header) => {
-            if (url == '/v1/carts/getShoppingCart?userId=1') {
+        fetchData.mockImplementation((url) => {
+            if (url == `${GET_SHOPPING_CART_ENDPOINT}?userId=1`) {
 
                 return Promise.resolve({
                     shoppingCartId: 1,
                     totalPrice: 0,
                     shoppingCartItems: []
                 });
-            } 
-            else if (url == '/v1/books/search?searchCriteria=&pageNo=0') {
+            }
+            else if (url ==  `${SEARCH_BOOK_ENDPOINT}?searchCriteria=&pageNo=0`) {
                 return Promise.resolve({
                     "totalElements": 43,
                     "totalPages": 5,
@@ -164,41 +164,47 @@ describe('BookList Component', () => {
                     "empty": false
                 });
             }
-         
             return Promise.reject(new Error('not found'));
         });
+        window.alert = jest.fn();
     });
 
-    describe('Pagination', () => {
-        test('should call fetch 2 times to get shopping cart and books', async () => {
-            render(<Provider store={store}><BookList /></Provider>);
-            await waitFor(() => {
-                expect(fetchData).toHaveBeenCalledTimes(2)
-            });
+    test('should call fetch 2 times to get shopping cart and books', async () => {
+        render(<Provider store={store}><BookList /></Provider>);
+        await waitFor(() => {
+            expect(fetchData).toHaveBeenCalledTimes(2)
         });
     });
 
-    describe('Pagination', () => {
-        test('should render prev and next page', async () => {
-            render(<Provider store={store}><BookList /></Provider>);
-            await waitFor(() => {
-            expect(screen.getByText('Page 1 of 5')).toBeInTheDocument(); 
-            });
+    test('should render prev and next page', async () => {
+        render(<Provider store={store}><BookList /></Provider>);
+        await waitFor(() => {
+            expect(screen.getByText('Page 1 of 5')).toBeInTheDocument();
+        });
 
+    });
+
+    test('click search button should rerender the component', async () => {
+        render(<Provider store={store}><BookList /></Provider>);
+        fireEvent.click(screen.getByText(/Search/i));
+        await waitFor(() => {
+            expect(fetchData).toHaveBeenCalled();
         });
     });
 
-    describe('Pagination', () => {
-        test('click search button should rerender the component', async () => {
-            render(<Provider store={store}><BookList /></Provider>);
-
-            fireEvent.click(screen.getByText(/Search/i));
-            await waitFor(() => {
-                expect(fetchData).toHaveBeenCalled();
-            });
-
+    test('Click on next page, fetches new page', async () => {
+        render(<Provider store={store}><BookList /></Provider>);
+        await waitFor(() => {
+            fireEvent.click(screen.getByText(/Next/i));
+            expect(fetchData).toHaveBeenCalled();
         });
     });
 
-
+    test('Previous button disabled on fresh render', async () => {
+        render(<Provider store={store}><BookList /></Provider>);
+        await waitFor(() => {
+            const PreviousButton = screen.getByText('Previous');
+            expect(PreviousButton).toBeDisabled();
+        });
+    });
 });

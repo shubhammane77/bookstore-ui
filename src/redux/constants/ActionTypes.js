@@ -6,3 +6,5 @@ export const SET_SHOPPING_CART_ITEMS = "SET_SHOPPING_CART_ITEMS";
 export const UPDATE_BOOK_QUANTITY = "UPDATE_BOOK_QUANTITY";
 export const DELETE_CART = "DELETE_CART";
 
+export const LOGIN = "LOGIN";
+export const LOGOUT = "LOGOUT";

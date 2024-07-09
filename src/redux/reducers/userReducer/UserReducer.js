@@ -1,3 +1,5 @@
+import { LOGIN, LOGOUT } from "../../constants/ActionTypes";
+
 const initialState = {
     userId: 0,
     userName: '',
@@ -6,9 +8,9 @@ const initialState = {
 
 const userReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'LOGIN':
+        case LOGIN:
             return { ...state, userId: action.payload.userId, userName:action.payload.userName, token: action.payload.token };
-        case 'LOGOUT':
+        case LOGOUT:
             return initialState;
         default:
             return state;

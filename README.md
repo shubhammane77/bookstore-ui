@@ -10,6 +10,8 @@ Welcome to the README for the BookStore UI Application repository. This reposito
 
 ## Installation
 
+Make sure you have npm and Node installed.
+
 To get started with this project, follow these steps:
 
 1. Clone the repository to your local machine.

@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import './Login.css'
 import { useNavigate } from 'react-router-dom';
-import { postData } from '../../apiService';
+import { postData } from '../../api/apiService';
 import { useDispatch } from 'react-redux';
 import { user_login } from '../../redux/actions/userActions';
+import { LOGIN_USER_ENDPOINT } from '../../api/endpoints';
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -12,7 +13,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const login = async (username, password) => {
-        const endpoint = `/v1/auth/login`;
+        const endpoint = LOGIN_USER_ENDPOINT;
         try {
             var request = { userName: username, password: password };
             const result = await postData(endpoint, request);
@@ -24,7 +25,7 @@ const Login = () => {
                 navigate('/');
             }
         } catch (error) {
-            alert('Backend unreachable');
+            alert('Error while login: ' + error.message);
         }
     };
     const handleSubmit = (e) => {
@@ -43,7 +44,7 @@ const Login = () => {
                 <button disabled={!(username && password)} onClick={handleSubmit} type="submit">Log In</button>
             </div>
             <div className="form-group">
-                <button onClick={() => navigate('/register')}>New User Registeration</button>
+                <button onClick={() => navigate('/register')}>New User Registration</button>
             </div>
         </div>
     );
